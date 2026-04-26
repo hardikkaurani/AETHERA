@@ -6,7 +6,7 @@ import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
  * Displays tickets in 3 columns (todo, in_progress, done)
  * Supports drag-and-drop to update ticket status
  */
-export default function KanbanBoard({ tickets = [], onStatusChange, loading = false }) {
+export default function KanbanBoard({ tickets = [], onStatusChange, onTicketClick, loading = false }) {
   /**
    * Group tickets by status
    */
@@ -96,6 +96,7 @@ export default function KanbanBoard({ tickets = [], onStatusChange, loading = fa
                           ref={provided.innerRef}
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
+                          onClick={() => onTicketClick?.(ticket.id)}
                           className={`bg-white p-4 rounded-lg border-l-4 cursor-move transition ${
                             snapshot.isDragging
                               ? 'shadow-lg scale-105 opacity-50'

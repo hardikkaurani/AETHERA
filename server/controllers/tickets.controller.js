@@ -1,158 +1,279 @@
 import pool from '../config/db.js';
+import { logActivity } from './activity.controller.js';
+
+const validPriorities = ['low', 'medium', 'high', 'critical'];
+const validTypes = ['bug', 'feature', 'task', 'improvement'];
+const validStatuses = ['todo', 'in_progress', 'done'];
+
+const parsePage = (value, fallback) => {
+  const parsed = Number.parseInt(value, 10);
+  return Number.isNaN(parsed) || parsed < 1 ? fallback : parsed;
+};
+
+const normalizeStatus = (status) => {
+  if (!status) {
+    return undefined;
+  }
+
+  const value = String(status).trim().toLowerCase();
+  return value === 'in-progress' ? 'in_progress' : value;
+};
+
+const getProjectAccess = async (projectId, userId) => {
+  const result = await pool.query(
+    `
+    SELECT
+      p.id,
+      p.owner_id,
+      pm.role AS member_role
+    FROM projects p
+    LEFT JOIN project_members pm
+      ON pm.project_id = p.id AND pm.user_id = $2
+    WHERE p.id = $1
+    `,
+    [projectId, userId]
+  );
+
+  if (result.rows.length === 0) {
+    return null;
+  }
+
+  const project = result.rows[0];
+  const isOwner = project.owner_id === userId;
+  const isMember = isOwner || Boolean(project.member_role);
+
+  return {
+    project,
+    isOwner,
+    isMember,
+    userRole: isOwner ? 'owner' : project.member_role,
+  };
+};
+
+const getTicketAccess = async (ticketId, userId) => {
+  const result = await pool.query(
+    `
+    SELECT
+      t.id,
+      t.project_id,
+      t.reporter_id,
+      t.assignee_id,
+      t.status,
+      p.owner_id,
+      pm.role AS member_role
+    FROM tickets t
+    JOIN projects p ON p.id = t.project_id
+    LEFT JOIN project_members pm
+      ON pm.project_id = p.id AND pm.user_id = $2
+    WHERE t.id = $1
+    `,
+    [ticketId, userId]
+  );
+
+  if (result.rows.length === 0) {
+    return null;
+  }
+
+  const ticket = result.rows[0];
+  const isOwner = ticket.owner_id === userId;
+  const isMember = isOwner || Boolean(ticket.member_role);
+
+  return {
+    ticket,
+    isOwner,
+    isMember,
+    userRole: isOwner ? 'owner' : ticket.member_role,
+  };
+};
+
+const isProjectMember = async (projectId, userId) => {
+  const result = await pool.query(
+    'SELECT 1 FROM project_members WHERE project_id = $1 AND user_id = $2',
+    [projectId, userId]
+  );
+
+  return result.rows.length > 0;
+};
+
+const getTicketWithMeta = async (ticketId) => {
+  const result = await pool.query(
+    `
+    SELECT
+      t.*,
+      a.name AS assignee_name,
+      a.email AS assignee_email,
+      r.name AS reporter_name,
+      r.email AS reporter_email,
+      COUNT(c.id)::INT AS comment_count
+    FROM tickets t
+    LEFT JOIN users a ON a.id = t.assignee_id
+    LEFT JOIN users r ON r.id = t.reporter_id
+    LEFT JOIN comments c ON c.ticket_id = t.id
+    WHERE t.id = $1
+    GROUP BY t.id, a.id, a.name, a.email, r.id, r.name, r.email
+    `,
+    [ticketId]
+  );
+
+  return result.rows[0] || null;
+};
 
 /**
- * Get all tickets for a project with filters
- * Supports filtering by: status, priority, assignee, search term
- * Supports pagination and sorting
+ * Get all tickets for a project with filters.
  */
 export const getProjectTickets = async (req, res, next) => {
   try {
-    const { id: projectId } = req.params;
+    const projectId = req.params.id;
     const userId = req.user.userId;
-    const {
-      status,
-      priority,
-      assignee,
-      search,
-      page = 1,
-      limit = 20,
-      sortBy = 'created_at',
-      sortOrder = 'DESC',
-    } = req.query;
+    const access = await getProjectAccess(projectId, userId);
 
-    // Verify user has access to project
-    const accessCheck = await pool.query(
-      `
-      SELECT role FROM project_members
-      WHERE project_id = $1 AND user_id = $2
-      `,
-      [projectId, userId]
-    );
+    if (!access) {
+      return res.status(404).json({
+        success: false,
+        message: 'Project not found',
+      });
+    }
 
-    if (accessCheck.rows.length === 0) {
+    if (!access.isMember) {
       return res.status(403).json({
         success: false,
         message: 'Access denied',
       });
     }
 
-    // Build dynamic query
-    let whereClause = 'WHERE t.project_id = $1';
-    const params = [projectId];
-    let paramIndex = 2;
+    const page = parsePage(req.query.page, 1);
+    const limit = Math.min(parsePage(req.query.limit, 20), 100);
+    const offset = (page - 1) * limit;
+    const status = normalizeStatus(req.query.status);
+    const priority = req.query.priority?.trim().toLowerCase();
+    const assignee = req.query.assignee?.trim();
+    const search = req.query.search?.trim();
+    const sortBy = req.query.sortBy;
+    const sortOrder = req.query.sortOrder;
 
-    // Add filters
+    if (status && !validStatuses.includes(status)) {
+      return res.status(400).json({
+        success: false,
+        message: `Invalid status. Must be one of: todo, in-progress, done`,
+      });
+    }
+
+    if (priority && !validPriorities.includes(priority)) {
+      return res.status(400).json({
+        success: false,
+        message: `Invalid priority. Must be one of: ${validPriorities.join(', ')}`,
+      });
+    }
+
+    const where = ['t.project_id = $1'];
+    const params = [projectId];
+
     if (status) {
-      whereClause += ` AND t.status = $${paramIndex}`;
       params.push(status);
-      paramIndex++;
+      where.push(`t.status = $${params.length}`);
     }
 
     if (priority) {
-      whereClause += ` AND t.priority = $${paramIndex}`;
       params.push(priority);
-      paramIndex++;
+      where.push(`t.priority = $${params.length}`);
     }
 
     if (assignee) {
-      whereClause += ` AND t.assignee_id = $${paramIndex}`;
       params.push(assignee);
-      paramIndex++;
+      where.push(`t.assignee_id = $${params.length}`);
     }
 
     if (search) {
-      whereClause += ` AND (t.title ILIKE $${paramIndex} OR t.description ILIKE $${paramIndex})`;
       params.push(`%${search}%`);
-      paramIndex++;
+      where.push(`(t.title ILIKE $${params.length} OR COALESCE(t.description, '') ILIKE $${params.length})`);
     }
 
-    // Validate sortBy to prevent SQL injection
+    const whereClause = `WHERE ${where.join(' AND ')}`;
     const validSortFields = ['created_at', 'updated_at', 'priority', 'status', 'title', 'due_date'];
-    const sortField = validSortFields.includes(sortBy) ? sortBy : 'created_at';
-    const order = sortOrder.toUpperCase() === 'ASC' ? 'ASC' : 'DESC';
+    const safeSortBy = validSortFields.includes(sortBy) ? sortBy : 'created_at';
+    const safeSortOrder = String(sortOrder).toUpperCase() === 'ASC' ? 'ASC' : 'DESC';
 
-    // Get total count
     const countResult = await pool.query(
-      `SELECT COUNT(*) as total FROM tickets t ${whereClause}`,
+      `SELECT COUNT(*)::INT AS total FROM tickets t ${whereClause}`,
       params
     );
-    const total = parseInt(countResult.rows[0].total);
-    const totalPages = Math.ceil(total / limit);
 
-    // Get tickets with assignee and reporter info
-    const offset = (page - 1) * limit;
     const ticketsResult = await pool.query(
       `
-      SELECT 
+      SELECT
         t.*,
-        a.name as assignee_name,
-        a.email as assignee_email,
-        r.name as reporter_name,
-        r.email as reporter_email,
-        COUNT(c.id) as comment_count
+        a.name AS assignee_name,
+        a.email AS assignee_email,
+        r.name AS reporter_name,
+        r.email AS reporter_email,
+        COUNT(c.id)::INT AS comment_count
       FROM tickets t
-      LEFT JOIN users a ON t.assignee_id = a.id
-      LEFT JOIN users r ON t.reporter_id = r.id
-      LEFT JOIN comments c ON t.id = c.ticket_id
+      LEFT JOIN users a ON a.id = t.assignee_id
+      LEFT JOIN users r ON r.id = t.reporter_id
+      LEFT JOIN comments c ON c.ticket_id = t.id
       ${whereClause}
       GROUP BY t.id, a.id, a.name, a.email, r.id, r.name, r.email
-      ORDER BY t.${sortField} ${order}
-      LIMIT $${paramIndex} OFFSET $${paramIndex + 1}
+      ORDER BY t.${safeSortBy} ${safeSortOrder}
+      LIMIT $${params.length + 1} OFFSET $${params.length + 2}
       `,
       [...params, limit, offset]
     );
+
+    const total = countResult.rows[0].total;
 
     return res.status(200).json({
       success: true,
       data: {
         tickets: ticketsResult.rows,
         pagination: {
-          currentPage: parseInt(page),
-          totalPages,
+          currentPage: page,
+          totalPages: Math.ceil(total / limit) || 1,
           total,
-          limit: parseInt(limit),
+          limit,
         },
       },
     });
   } catch (error) {
-    console.error('Get tickets error:', error);
     next(error);
   }
 };
 
 /**
- * Create a new ticket in a project
+ * Create a new ticket in a project.
  */
 export const createTicket = async (req, res, next) => {
   try {
-    const { id: projectId } = req.params;
+    const projectId = req.params.id;
     const userId = req.user.userId;
-    const { title, description, priority = 'medium', type = 'bug', assignee_id, due_date } = req.body;
+    const access = await getProjectAccess(projectId, userId);
 
-    // Validate input
-    if (!title || title.trim() === '') {
-      return res.status(400).json({
+    if (!access) {
+      return res.status(404).json({
         success: false,
-        message: 'Ticket title is required',
+        message: 'Project not found',
       });
     }
 
-    // Verify user is project member
-    const memberCheck = await pool.query(
-      'SELECT role FROM project_members WHERE project_id = $1 AND user_id = $2',
-      [projectId, userId]
-    );
-
-    if (memberCheck.rows.length === 0) {
+    if (!access.isMember) {
       return res.status(403).json({
         success: false,
         message: 'Access denied',
       });
     }
 
-    // Validate enum values
-    const validPriorities = ['low', 'medium', 'high', 'critical'];
-    const validTypes = ['bug', 'feature', 'task', 'improvement'];
+    const title = req.body.title?.trim();
+    const description = req.body.description?.trim() || null;
+    const priority = req.body.priority?.trim().toLowerCase() || 'medium';
+    const type = req.body.type?.trim().toLowerCase() || 'bug';
+    const assigneeId = req.body.assignee_id || null;
+    const dueDate = req.body.due_date || null;
+
+    if (!title) {
+      return res.status(400).json({
+        success: false,
+        message: 'Ticket title is required',
+      });
+    }
 
     if (!validPriorities.includes(priority)) {
       return res.status(400).json({
@@ -168,32 +289,40 @@ export const createTicket = async (req, res, next) => {
       });
     }
 
-    // If assignee provided, verify they're a project member
-    if (assignee_id) {
-      const assigneeCheck = await pool.query(
-        'SELECT user_id FROM project_members WHERE project_id = $1 AND user_id = $2',
-        [projectId, assignee_id]
-      );
-
-      if (assigneeCheck.rows.length === 0) {
-        return res.status(400).json({
-          success: false,
-          message: 'Assignee must be a project member',
-        });
-      }
+    if (assigneeId && !(await isProjectMember(projectId, assigneeId))) {
+      return res.status(400).json({
+        success: false,
+        message: 'Assignee must be a project member',
+      });
     }
 
-    // Create ticket
     const result = await pool.query(
       `
-      INSERT INTO tickets (project_id, title, description, priority, type, reporter_id, assignee_id, due_date, status)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-      RETURNING *
+      INSERT INTO tickets (
+        project_id,
+        title,
+        description,
+        priority,
+        type,
+        reporter_id,
+        assignee_id,
+        due_date,
+        status
+      )
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 'todo')
+      RETURNING id
       `,
-      [projectId, title, description || null, priority, type, userId, assignee_id || null, due_date || null, 'todo']
+      [projectId, title, description, priority, type, userId, assigneeId, dueDate]
     );
 
-    const ticket = result.rows[0];
+    const ticket = await getTicketWithMeta(result.rows[0].id);
+
+    await logActivity(projectId, userId, 'created', 'ticket', ticket.id, {
+      title: ticket.title,
+      status: ticket.status,
+      priority: ticket.priority,
+      assigneeId: ticket.assignee_id,
+    });
 
     return res.status(201).json({
       success: true,
@@ -203,71 +332,49 @@ export const createTicket = async (req, res, next) => {
       },
     });
   } catch (error) {
-    console.error('Create ticket error:', error);
     next(error);
   }
 };
 
 /**
- * Get single ticket details with comments
+ * Get single ticket details with comments.
  */
 export const getTicketById = async (req, res, next) => {
   try {
-    const { ticketId } = req.params;
-    const userId = req.user.userId;
+    const access = await getTicketAccess(req.params.ticketId, req.user.userId);
 
-    // Get ticket with assignee/reporter info
-    const ticketResult = await pool.query(
-      `
-      SELECT 
-        t.*,
-        a.name as assignee_name,
-        a.email as assignee_email,
-        r.name as reporter_name,
-        r.email as reporter_email
-      FROM tickets t
-      LEFT JOIN users a ON t.assignee_id = a.id
-      LEFT JOIN users r ON t.reporter_id = r.id
-      WHERE t.id = $1
-      `,
-      [ticketId]
-    );
-
-    if (ticketResult.rows.length === 0) {
+    if (!access) {
       return res.status(404).json({
         success: false,
         message: 'Ticket not found',
       });
     }
 
-    const ticket = ticketResult.rows[0];
-
-    // Verify user has access to this ticket's project
-    const accessCheck = await pool.query(
-      `
-      SELECT role FROM project_members
-      WHERE project_id = $1 AND user_id = $2
-      `,
-      [ticket.project_id, userId]
-    );
-
-    if (accessCheck.rows.length === 0) {
+    if (!access.isMember) {
       return res.status(403).json({
         success: false,
         message: 'Access denied',
       });
     }
 
-    // Get comments for this ticket
+    const ticket = await getTicketWithMeta(req.params.ticketId);
     const commentsResult = await pool.query(
       `
-      SELECT c.*, u.name, u.email, u.avatar_url
+      SELECT
+        c.id,
+        c.ticket_id,
+        c.author_id,
+        c.body,
+        c.created_at,
+        u.name AS author_name,
+        u.email AS author_email,
+        u.avatar_url
       FROM comments c
-      JOIN users u ON c.author_id = u.id
+      JOIN users u ON u.id = c.author_id
       WHERE c.ticket_id = $1
       ORDER BY c.created_at DESC
       `,
-      [ticketId]
+      [req.params.ticketId]
     );
 
     return res.status(200).json({
@@ -280,124 +387,128 @@ export const getTicketById = async (req, res, next) => {
       },
     });
   } catch (error) {
-    console.error('Get ticket error:', error);
     next(error);
   }
 };
 
 /**
- * Update ticket (title, description, priority, type, assignee, due_date)
- * Any project member can update
+ * Update ticket details.
  */
 export const updateTicket = async (req, res, next) => {
   try {
-    const { ticketId } = req.params;
+    const ticketId = req.params.ticketId;
     const userId = req.user.userId;
-    const { title, description, priority, type, assignee_id, due_date } = req.body;
+    const access = await getTicketAccess(ticketId, userId);
 
-    // Get ticket
-    const ticketResult = await pool.query('SELECT project_id FROM tickets WHERE id = $1', [ticketId]);
-
-    if (ticketResult.rows.length === 0) {
+    if (!access) {
       return res.status(404).json({
         success: false,
         message: 'Ticket not found',
       });
     }
 
-    const projectId = ticketResult.rows[0].project_id;
-
-    // Verify user is project member
-    const memberCheck = await pool.query(
-      'SELECT role FROM project_members WHERE project_id = $1 AND user_id = $2',
-      [projectId, userId]
-    );
-
-    if (memberCheck.rows.length === 0) {
+    if (!access.isMember) {
       return res.status(403).json({
         success: false,
         message: 'Access denied',
       });
     }
 
-    // Build update query dynamically
     const updates = [];
     const values = [ticketId];
-    let paramIndex = 2;
+    const changedFields = {};
 
-    if (title !== undefined) {
-      updates.push(`title = $${paramIndex}`);
-      values.push(title);
-      paramIndex++;
-    }
+    if (req.body.title !== undefined) {
+      const title = req.body.title?.trim();
 
-    if (description !== undefined) {
-      updates.push(`description = $${paramIndex}`);
-      values.push(description);
-      paramIndex++;
-    }
-
-    if (priority !== undefined) {
-      updates.push(`priority = $${paramIndex}`);
-      values.push(priority);
-      paramIndex++;
-    }
-
-    if (type !== undefined) {
-      updates.push(`type = $${paramIndex}`);
-      values.push(type);
-      paramIndex++;
-    }
-
-    if (assignee_id !== undefined) {
-      // Verify assignee is project member
-      if (assignee_id !== null) {
-        const assigneeCheck = await pool.query(
-          'SELECT user_id FROM project_members WHERE project_id = $1 AND user_id = $2',
-          [projectId, assignee_id]
-        );
-
-        if (assigneeCheck.rows.length === 0) {
-          return res.status(400).json({
-            success: false,
-            message: 'Assignee must be a project member',
-          });
-        }
+      if (!title) {
+        return res.status(400).json({
+          success: false,
+          message: 'Ticket title cannot be empty',
+        });
       }
 
-      updates.push(`assignee_id = $${paramIndex}`);
-      values.push(assignee_id);
-      paramIndex++;
+      values.push(title);
+      updates.push(`title = $${values.length}`);
+      changedFields.title = title;
     }
 
-    if (due_date !== undefined) {
-      updates.push(`due_date = $${paramIndex}`);
-      values.push(due_date);
-      paramIndex++;
+    if (req.body.description !== undefined) {
+      const description = req.body.description?.trim() || null;
+      values.push(description);
+      updates.push(`description = $${values.length}`);
+      changedFields.description = description;
     }
 
-    // Always update updated_at
-    updates.push(`updated_at = NOW()`);
+    if (req.body.priority !== undefined) {
+      const priority = req.body.priority?.trim().toLowerCase();
 
-    if (updates.length === 1) {
+      if (!validPriorities.includes(priority)) {
+        return res.status(400).json({
+          success: false,
+          message: `Invalid priority. Must be one of: ${validPriorities.join(', ')}`,
+        });
+      }
+
+      values.push(priority);
+      updates.push(`priority = $${values.length}`);
+      changedFields.priority = priority;
+    }
+
+    if (req.body.type !== undefined) {
+      const type = req.body.type?.trim().toLowerCase();
+
+      if (!validTypes.includes(type)) {
+        return res.status(400).json({
+          success: false,
+          message: `Invalid type. Must be one of: ${validTypes.join(', ')}`,
+        });
+      }
+
+      values.push(type);
+      updates.push(`type = $${values.length}`);
+      changedFields.type = type;
+    }
+
+    if (req.body.assignee_id !== undefined) {
+      const assigneeId = req.body.assignee_id || null;
+
+      if (assigneeId && !(await isProjectMember(access.ticket.project_id, assigneeId))) {
+        return res.status(400).json({
+          success: false,
+          message: 'Assignee must be a project member',
+        });
+      }
+
+      values.push(assigneeId);
+      updates.push(`assignee_id = $${values.length}`);
+      changedFields.assignee_id = assigneeId;
+    }
+
+    if (req.body.due_date !== undefined) {
+      const dueDate = req.body.due_date || null;
+      values.push(dueDate);
+      updates.push(`due_date = $${values.length}`);
+      changedFields.due_date = dueDate;
+    }
+
+    if (updates.length === 0) {
       return res.status(400).json({
         success: false,
         message: 'No fields to update',
       });
     }
 
-    const query = `UPDATE tickets SET ${updates.join(', ')} WHERE id = $1 RETURNING *`;
+    updates.push('updated_at = NOW()');
 
-    const result = await pool.query(query, values);
-    const ticket = result.rows[0];
-
-    // Get updated comment count
-    const commentCount = await pool.query(
-      'SELECT COUNT(*) as count FROM comments WHERE ticket_id = $1',
-      [ticketId]
+    await pool.query(
+      `UPDATE tickets SET ${updates.join(', ')} WHERE id = $1`,
+      values
     );
 
-    ticket.comment_count = parseInt(commentCount.rows[0].count);
+    const ticket = await getTicketWithMeta(ticketId);
+
+    await logActivity(access.ticket.project_id, userId, 'updated', 'ticket', ticketId, changedFields);
 
     return res.status(200).json({
       success: true,
@@ -407,131 +518,115 @@ export const updateTicket = async (req, res, next) => {
       },
     });
   } catch (error) {
-    console.error('Update ticket error:', error);
     next(error);
   }
 };
 
 /**
- * Update ticket status (todo, in_progress, done)
- * Used for Kanban drag-and-drop
+ * Update ticket status.
  */
 export const updateTicketStatus = async (req, res, next) => {
   try {
-    const { ticketId } = req.params;
+    const ticketId = req.params.ticketId;
     const userId = req.user.userId;
-    const { status } = req.body;
+    const status = normalizeStatus(req.body.status);
 
-    // Validate status
-    const validStatuses = ['todo', 'in_progress', 'done'];
     if (!validStatuses.includes(status)) {
       return res.status(400).json({
         success: false,
-        message: `Invalid status. Must be one of: ${validStatuses.join(', ')}`,
+        message: 'Invalid status. Must be one of: todo, in-progress, done',
       });
     }
 
-    // Get ticket
-    const ticketResult = await pool.query('SELECT project_id FROM tickets WHERE id = $1', [ticketId]);
+    const access = await getTicketAccess(ticketId, userId);
 
-    if (ticketResult.rows.length === 0) {
+    if (!access) {
       return res.status(404).json({
         success: false,
         message: 'Ticket not found',
       });
     }
 
-    const projectId = ticketResult.rows[0].project_id;
-
-    // Verify user is project member
-    const memberCheck = await pool.query(
-      'SELECT role FROM project_members WHERE project_id = $1 AND user_id = $2',
-      [projectId, userId]
-    );
-
-    if (memberCheck.rows.length === 0) {
+    if (!access.isMember) {
       return res.status(403).json({
         success: false,
         message: 'Access denied',
       });
     }
 
-    // Update status
-    const result = await pool.query(
-      'UPDATE tickets SET status = $1, updated_at = NOW() WHERE id = $2 RETURNING *',
+    await pool.query(
+      `
+      UPDATE tickets
+      SET status = $1, updated_at = NOW()
+      WHERE id = $2
+      `,
       [status, ticketId]
     );
 
+    const ticket = await getTicketWithMeta(ticketId);
+
+    await logActivity(access.ticket.project_id, userId, 'status_changed', 'ticket', ticketId, {
+      from: access.ticket.status,
+      to: status,
+    });
+
     return res.status(200).json({
       success: true,
-      message: 'Ticket status updated',
+      message: 'Ticket status updated successfully',
       data: {
-        ticket: result.rows[0],
+        ticket,
       },
     });
   } catch (error) {
-    console.error('Update ticket status error:', error);
     next(error);
   }
 };
 
 /**
- * Delete ticket
- * Only reporter or project admin can delete
+ * Delete ticket.
  */
 export const deleteTicket = async (req, res, next) => {
   try {
-    const { ticketId } = req.params;
+    const ticketId = req.params.ticketId;
     const userId = req.user.userId;
+    const access = await getTicketAccess(ticketId, userId);
 
-    // Get ticket
-    const ticketResult = await pool.query(
-      'SELECT project_id, reporter_id FROM tickets WHERE id = $1',
-      [ticketId]
-    );
-
-    if (ticketResult.rows.length === 0) {
+    if (!access) {
       return res.status(404).json({
         success: false,
         message: 'Ticket not found',
       });
     }
 
-    const { project_id: projectId, reporter_id: reporterId } = ticketResult.rows[0];
-
-    // Verify user is reporter or admin
-    const memberResult = await pool.query(
-      'SELECT role FROM project_members WHERE project_id = $1 AND user_id = $2',
-      [projectId, userId]
-    );
-
-    if (memberResult.rows.length === 0) {
+    if (!access.isMember) {
       return res.status(403).json({
         success: false,
         message: 'Access denied',
       });
     }
 
-    const userRole = memberResult.rows[0].role;
-    const isReporter = userId === reporterId;
-    const isAdmin = ['admin', 'manager'].includes(userRole);
+    const isReporter = access.ticket.reporter_id === userId;
+    const isManager = ['owner', 'admin', 'manager'].includes(access.userRole);
 
-    if (!isReporter && !isAdmin) {
+    if (!isReporter && !isManager) {
       return res.status(403).json({
         success: false,
-        message: 'Only ticket reporter or admin can delete',
+        message: 'Only the ticket reporter, owner, admin, or manager can delete this ticket',
       });
     }
 
-    // Delete ticket (cascades to comments)
     await pool.query('DELETE FROM tickets WHERE id = $1', [ticketId]);
+
+    await logActivity(access.ticket.project_id, userId, 'deleted', 'ticket', ticketId, {
+      reporterId: access.ticket.reporter_id,
+      assigneeId: access.ticket.assignee_id,
+    });
 
     return res.status(200).json({
       success: true,
       message: 'Ticket deleted successfully',
     });
   } catch (error) {
-    console.error('Delete ticket error:', error);
     next(error);
   }
 };

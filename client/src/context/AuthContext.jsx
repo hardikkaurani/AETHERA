@@ -14,6 +14,24 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const tokenRefreshTimer = useRef(null);
 
+  const clearSession = useCallback(() => {
+    localStorage.removeItem('authToken');
+    setToken(null);
+    setUser(null);
+    if (tokenRefreshTimer.current) {
+      clearTimeout(tokenRefreshTimer.current);
+      tokenRefreshTimer.current = null;
+    }
+  }, []);
+
+  /**
+   * Logout user
+   * Clear token from localStorage and context
+   */
+  const logout = useCallback(() => {
+    clearSession();
+  }, [clearSession]);
+
   /**
    * Decode JWT to get expiration time
    */
@@ -59,7 +77,7 @@ export const AuthProvider = ({ children }) => {
         logout();
       }, logoutTime);
     }
-  }, []);
+  }, [logout]);
 
   /**
    * Check if user is already logged in on mount
@@ -79,8 +97,7 @@ export const AuthProvider = ({ children }) => {
         .catch((err) => {
           // Token expired or invalid
           console.error('Token verification failed:', err);
-          localStorage.removeItem('authToken');
-          setToken(null);
+          clearSession();
         })
         .finally(() => {
           setLoading(false);
@@ -94,7 +111,7 @@ export const AuthProvider = ({ children }) => {
         clearTimeout(tokenRefreshTimer.current);
       }
     };
-  }, [setupTokenExpiryCheck]);
+  }, [clearSession, setupTokenExpiryCheck]);
 
   /**
    * Register a new user
@@ -128,19 +145,6 @@ export const AuthProvider = ({ children }) => {
     }
     return response;
   }, [setupTokenExpiryCheck]);
-
-  /**
-   * Logout user
-   * Clear token from localStorage and context
-   */
-  const logout = useCallback(() => {
-    localStorage.removeItem('authToken');
-    setToken(null);
-    setUser(null);
-    if (tokenRefreshTimer.current) {
-      clearTimeout(tokenRefreshTimer.current);
-    }
-  }, []);
 
   /**
    * Check if user is authenticated

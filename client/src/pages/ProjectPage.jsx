@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import useAuth from '../hooks/useAuth';
 import useProjects from '../hooks/useProjects';
 import useTickets from '../hooks/useTickets';
 import ManageMembersModal from '../components/layout/ManageMembersModal';
@@ -10,14 +11,13 @@ import KanbanBoard from '../components/tickets/KanbanBoard';
 
 /**
  * Project Page
- * Shows single project details, members, and tickets
- * Allows managing project members and tickets
+ * Shows single project details, members, and tickets.
  */
 export default function ProjectPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { getProject, editProject, removeProject, addMember, removeMember, loading: projectLoading, error } =
-    useProjects();
+  const { user } = useAuth();
+  const { getProject, editProject, removeProject, removeMember, loading: projectLoading } = useProjects();
   const { getAllTickets, removeTicket, changeTicketStatus, tickets, loading: ticketsLoading } = useTickets();
 
   const [project, setProject] = useState(null);
@@ -25,44 +25,13 @@ export default function ProjectPage() {
   const [showCreateTicketModal, setShowCreateTicketModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editData, setEditData] = useState({ title: '', description: '' });
-  const [viewMode, setViewMode] = useState('list'); // 'list' or 'kanban'
+  const [viewMode, setViewMode] = useState('list');
 
-  /**
-   * Load project and tickets on mount
-   */
   useEffect(() => {
     loadProject();
     loadTickets();
   }, [id]);
 
-  /**
-   * Load tickets for project
-   */
-  const loadTickets = async () => {
-    try {
-      await getAllTickets(id);
-    } catch (err) {
-      toast.error('Failed to load tickets');
-    }
-  };
-
-  /**
-   * Handle ticket status change (from Kanban drag-and-drop)
-   */
-  const handleStatusChange = async (ticketId, newStatus) => {
-    try {
-      await changeTicketStatus(ticketId, newStatus);
-      await loadTickets();
-      toast.success('Ticket status updated');
-    } catch (err) {
-      toast.error(err.message);
-      await loadTickets(); // Refresh to reset UI
-    }
-  };
-
-  /**
-   * Load project details
-   */
   const loadProject = async () => {
     try {
       const data = await getProject(id);
@@ -77,9 +46,25 @@ export default function ProjectPage() {
     }
   };
 
-  /**
-   * Handle project delete
-   */
+  const loadTickets = async () => {
+    try {
+      await getAllTickets(id);
+    } catch (err) {
+      toast.error(err.message || 'Failed to load tickets');
+    }
+  };
+
+  const handleStatusChange = async (ticketId, newStatus) => {
+    try {
+      await changeTicketStatus(ticketId, newStatus);
+      await loadTickets();
+      toast.success('Ticket status updated');
+    } catch (err) {
+      toast.error(err.message);
+      await loadTickets();
+    }
+  };
+
   const handleDeleteProject = async () => {
     if (!window.confirm('Are you sure you want to delete this project?')) {
       return;
@@ -94,26 +79,48 @@ export default function ProjectPage() {
     }
   };
 
-  /**
-   * Handle project update
-   */
   const handleUpdateProject = async () => {
     try {
       await editProject(id, editData);
       toast.success('Project updated');
       setIsEditing(false);
-      loadProject();
+      await loadProject();
     } catch (err) {
       toast.error(err.message);
     }
   };
 
-  /**
-   * Check if user is owner or has admin role
-   */
-  const isOwner = project?.owner_id === project?.userRole || project?.userRole === 'owner';
-  const canManageMembers =
-    isOwner || project?.userRole === 'admin' || project?.userRole === 'manager';
+  const handleRemoveMember = async (member) => {
+    if (!window.confirm(`Remove ${member.name} from this project?`)) {
+      return;
+    }
+
+    try {
+      await removeMember(id, member.user_id);
+      toast.success('Member removed');
+      await Promise.all([loadProject(), loadTickets()]);
+    } catch (err) {
+      toast.error(err.message || 'Failed to remove member');
+    }
+  };
+
+  const handleDeleteTicket = async (ticketId) => {
+    if (!window.confirm('Delete this ticket?')) {
+      return;
+    }
+
+    try {
+      await removeTicket(ticketId);
+      await loadTickets();
+      toast.success('Ticket deleted');
+    } catch (err) {
+      toast.error(err.message);
+    }
+  };
+
+  const isOwner = project?.owner_id === user?.id || project?.userRole === 'owner';
+  const canManageMembers = isOwner || project?.userRole === 'admin' || project?.userRole === 'manager';
+  const canCreateTickets = project?.userRole !== 'viewer';
 
   if (projectLoading && !project) {
     return (
@@ -144,7 +151,6 @@ export default function ProjectPage() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      {/* Header */}
       <header className="bg-white shadow">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex justify-between items-start mb-4">
@@ -167,49 +173,44 @@ export default function ProjectPage() {
               ) : (
                 <div>
                   <h1 className="text-3xl font-bold text-slate-900">{project.title}</h1>
-                  {project.description && (
-                    <p className="text-slate-600 mt-2">{project.description}</p>
-                  )}
+                  {project.description && <p className="text-slate-600 mt-2">{project.description}</p>}
                 </div>
               )}
             </div>
 
             <div className="flex gap-2 ml-4">
-              {isOwner && (
-                <>
-                  {isEditing ? (
-                    <>
-                      <button
-                        onClick={handleUpdateProject}
-                        className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition"
-                      >
-                        Save
-                      </button>
-                      <button
-                        onClick={() => setIsEditing(false)}
-                        className="bg-slate-400 hover:bg-slate-500 text-white px-4 py-2 rounded-lg font-medium transition"
-                      >
-                        Cancel
-                      </button>
-                    </>
-                  ) : (
-                    <>
-                      <button
-                        onClick={() => setIsEditing(true)}
-                        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={handleDeleteProject}
-                        className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition"
-                      >
-                        Delete
-                      </button>
-                    </>
-                  )}
-                </>
-              )}
+              {isOwner &&
+                (isEditing ? (
+                  <>
+                    <button
+                      onClick={handleUpdateProject}
+                      className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition"
+                    >
+                      Save
+                    </button>
+                    <button
+                      onClick={() => setIsEditing(false)}
+                      className="bg-slate-400 hover:bg-slate-500 text-white px-4 py-2 rounded-lg font-medium transition"
+                    >
+                      Cancel
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button
+                      onClick={() => setIsEditing(true)}
+                      className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={handleDeleteProject}
+                      className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition"
+                    >
+                      Delete
+                    </button>
+                  </>
+                ))}
             </div>
           </div>
 
@@ -221,10 +222,8 @@ export default function ProjectPage() {
         </div>
       </header>
 
-      {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Members Section */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-lg shadow p-6">
               <div className="flex items-center justify-between mb-4">
@@ -239,7 +238,7 @@ export default function ProjectPage() {
                 )}
               </div>
 
-              {project.members && project.members.length > 0 ? (
+              {project.members?.length ? (
                 <div className="space-y-3">
                   {project.members.map((member) => (
                     <div key={member.user_id} className="flex items-center justify-between p-3 border rounded-lg">
@@ -251,8 +250,10 @@ export default function ProjectPage() {
                             member.role === 'admin'
                               ? 'bg-purple-100 text-purple-800'
                               : member.role === 'manager'
-                              ? 'bg-blue-100 text-blue-800'
-                              : 'bg-green-100 text-green-800'
+                                ? 'bg-blue-100 text-blue-800'
+                                : member.role === 'viewer'
+                                  ? 'bg-slate-100 text-slate-700'
+                                  : 'bg-green-100 text-green-800'
                           }`}
                         >
                           {member.role}
@@ -261,7 +262,7 @@ export default function ProjectPage() {
 
                       {canManageMembers && member.user_id !== project.owner_id && (
                         <button
-                          onClick={() => removeMember(id, member.user_id)}
+                          onClick={() => handleRemoveMember(member)}
                           className="text-red-600 hover:text-red-700 text-sm font-medium"
                         >
                           Remove
@@ -276,7 +277,6 @@ export default function ProjectPage() {
             </div>
           </div>
 
-          {/* Tickets Section */}
           <div className="lg:col-span-2">
             <div className="bg-white rounded-lg shadow p-6">
               <div className="flex items-center justify-between mb-6">
@@ -305,7 +305,8 @@ export default function ProjectPage() {
                     </button>
                   </div>
                 </div>
-                {canManageMembers && (
+
+                {canCreateTickets && (
                   <button
                     onClick={() => setShowCreateTicketModal(true)}
                     className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition"
@@ -320,43 +321,34 @@ export default function ProjectPage() {
                   <div className="w-8 h-8 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-2"></div>
                   <p className="text-slate-600">Loading tickets...</p>
                 </div>
-              ) : tickets && tickets.length > 0 ? (
+              ) : tickets?.length ? (
                 viewMode === 'list' ? (
                   <div className="grid grid-cols-1 gap-4">
                     {tickets.map((ticket) => (
-                      <div
+                      <TicketCard
                         key={ticket.id}
+                        ticket={ticket}
                         onClick={() => navigate(`/tickets/${ticket.id}`)}
-                        className="cursor-pointer"
-                      >
-                        <TicketCard
-                          ticket={ticket}
-                          onDelete={async () => {
-                            if (window.confirm('Delete this ticket?')) {
-                              try {
-                                await removeTicket(ticket.id);
-                                await loadTickets();
-                                toast.success('Ticket deleted');
-                              } catch (err) {
-                                toast.error(err.message);
-                              }
-                            }
-                          }}
-                        />
-                      </div>
+                        onDelete={
+                          ticket.reporter_id === user?.id || canManageMembers
+                            ? () => handleDeleteTicket(ticket.id)
+                            : undefined
+                        }
+                      />
                     ))}
                   </div>
                 ) : (
                   <KanbanBoard
                     tickets={tickets}
                     onStatusChange={handleStatusChange}
+                    onTicketClick={(ticketId) => navigate(`/tickets/${ticketId}`)}
                     loading={ticketsLoading}
                   />
                 )
               ) : (
                 <div className="text-center py-12 border-2 border-dashed border-slate-300 rounded-lg">
                   <p className="text-slate-600 mb-2">No tickets yet</p>
-                  {canManageMembers && (
+                  {canCreateTickets && (
                     <button
                       onClick={() => setShowCreateTicketModal(true)}
                       className="text-blue-600 hover:text-blue-700 font-medium"
@@ -371,26 +363,24 @@ export default function ProjectPage() {
         </div>
       </main>
 
-      {/* Manage Members Modal */}
       {showMembersModal && (
         <ManageMembersModal
           projectId={id}
           onClose={() => setShowMembersModal(false)}
-          onSuccess={() => {
-            loadProject();
+          onSuccess={async () => {
+            await loadProject();
             setShowMembersModal(false);
           }}
         />
       )}
 
-      {/* Create Ticket Modal */}
       {showCreateTicketModal && (
         <CreateTicketModal
           projectId={id}
           project={project}
           onClose={() => setShowCreateTicketModal(false)}
-          onSuccess={() => {
-            loadTickets();
+          onSuccess={async () => {
+            await loadTickets();
             setShowCreateTicketModal(false);
           }}
         />
