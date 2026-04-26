@@ -172,6 +172,22 @@ export const useTickets = () => {
         setError(null);
         const data = await commentsApi.createComment(token, ticketId, { body });
         setComments((prev) => [data.comment, ...prev]);
+        setCurrentTicket((prev) =>
+          prev && prev.id === ticketId
+            ? {
+                ...prev,
+                comments: [data.comment, ...(prev.comments || [])],
+                comment_count: (prev.comment_count || 0) + 1,
+              }
+            : prev
+        );
+        setTickets((prev) =>
+          prev.map((ticket) =>
+            ticket.id === ticketId
+              ? { ...ticket, comment_count: (ticket.comment_count || 0) + 1 }
+              : ticket
+          )
+        );
         return data;
       } catch (err) {
         const message = err.message || 'Failed to add comment';
@@ -194,6 +210,22 @@ export const useTickets = () => {
         setError(null);
         await commentsApi.deleteComment(token, commentId);
         setComments((prev) => prev.filter((c) => c.id !== commentId));
+        setCurrentTicket((prev) =>
+          prev
+            ? {
+                ...prev,
+                comments: (prev.comments || []).filter((comment) => comment.id !== commentId),
+                comment_count: Math.max((prev.comment_count || 1) - 1, 0),
+              }
+            : prev
+        );
+        setTickets((prev) =>
+          prev.map((ticket) =>
+            currentTicket && ticket.id === currentTicket.id
+              ? { ...ticket, comment_count: Math.max((ticket.comment_count || 1) - 1, 0) }
+              : ticket
+          )
+        );
         return { success: true };
       } catch (err) {
         const message = err.message || 'Failed to delete comment';
@@ -203,7 +235,7 @@ export const useTickets = () => {
         setLoading(false);
       }
     },
-    [token]
+    [token, currentTicket]
   );
 
   /**

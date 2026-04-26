@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import useAuth from '../hooks/useAuth';
+import { validatePassword } from '../utils/sanitize';
 
 /**
  * Register Page Component
@@ -59,9 +60,9 @@ export default function RegisterPage() {
         throw new Error('Please enter a valid email address');
       }
 
-      // Password length validation
-      if (formData.password.length < 6) {
-        throw new Error('Password must be at least 6 characters long');
+      const passwordError = validatePassword(formData.password);
+      if (passwordError) {
+        throw new Error(passwordError);
       }
 
       // Password match validation
@@ -155,7 +156,7 @@ export default function RegisterPage() {
                 className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
                 disabled={loading}
               />
-              <p className="text-xs text-slate-500 mt-1">At least 6 characters</p>
+              <p className="text-xs text-slate-500 mt-1">Use 8+ chars, a number, and a special character</p>
             </div>
 
             {/* Confirm Password Input */}

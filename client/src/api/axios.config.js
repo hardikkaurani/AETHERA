@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
 
 /**
  * Axios Instance Configuration
@@ -16,8 +16,9 @@ export const createApiInstance = (token) => {
   // Request interceptor - add auth token
   instance.interceptors.request.use(
     (config) => {
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
+      const authToken = token || localStorage.getItem('authToken');
+      if (authToken) {
+        config.headers.Authorization = `Bearer ${authToken}`;
       }
       return config;
     },

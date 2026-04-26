@@ -8,6 +8,7 @@ import useProjects from '../../hooks/useProjects';
  */
 export default function ManageMembersModal({ projectId, onClose, onSuccess }) {
   const { addMember, loading, error } = useProjects();
+  const formId = 'manage-members-form';
   const [formData, setFormData] = useState({
     email: '',
     role: 'developer',
@@ -66,7 +67,7 @@ export default function ManageMembersModal({ projectId, onClose, onSuccess }) {
         </div>
 
         {/* Content */}
-        <form onSubmit={handleSubmit} className="px-6 py-4 space-y-4">
+        <form id={formId} onSubmit={handleSubmit} className="px-6 py-4 space-y-4">
           {/* Error Alert */}
           {error && (
             <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
@@ -123,7 +124,8 @@ export default function ManageMembersModal({ projectId, onClose, onSuccess }) {
             Cancel
           </button>
           <button
-            onClick={handleSubmit}
+            type="submit"
+            form={formId}
             disabled={loading}
             className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
           >

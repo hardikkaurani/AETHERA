@@ -22,7 +22,7 @@ export default function DashboardPage() {
    */
   useEffect(() => {
     getAllProjects();
-  }, []);
+  }, [getAllProjects]);
 
   /**
    * Handle project deletion
@@ -60,7 +60,7 @@ export default function DashboardPage() {
             <h1 className="text-3xl font-bold text-slate-900">🐛 Bug Tracker</h1>
             <p className="text-sm text-slate-600 mt-1">Welcome, {user?.name}!</p>
           </div>
-          <div className="flex gaps-4 items-center space-x-4">
+          <div className="flex gap-4 items-center">
             <button
               onClick={() => setShowCreateModal(true)}
               className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition"
@@ -159,13 +159,15 @@ export default function DashboardPage() {
                     >
                       Open
                     </Link>
-                    <button
-                      onClick={() => handleDeleteProject(project.id)}
-                      disabled={deletingId === project.id}
-                      className="flex-1 bg-red-50 hover:bg-red-100 text-red-600 font-medium py-2 px-3 rounded transition disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      {deletingId === project.id ? '...' : 'Delete'}
-                    </button>
+                    {project.role === 'owner' && (
+                      <button
+                        onClick={() => handleDeleteProject(project.id)}
+                        disabled={deletingId === project.id}
+                        className="flex-1 bg-red-50 hover:bg-red-100 text-red-600 font-medium py-2 px-3 rounded transition disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {deletingId === project.id ? '...' : 'Delete'}
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>

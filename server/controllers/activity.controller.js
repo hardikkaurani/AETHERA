@@ -1,30 +1,70 @@
-/**
- * Activity Logger Controller
- * Tracks all project activities (ticket creation, status changes, comments, member changes)
- */
 import pool from '../config/db.js';
 
+const parseNumber = (value, fallback, min = 0, max = 100) => {
+  const parsed = Number.parseInt(value, 10);
+
+  if (Number.isNaN(parsed)) {
+    return fallback;
+  }
+
+  return Math.min(Math.max(parsed, min), max);
+};
+
+const getProjectAccess = async (projectId, userId) => {
+  const result = await pool.query(
+    `
+    SELECT
+      p.id,
+      p.owner_id,
+      pm.role AS member_role
+    FROM projects p
+    LEFT JOIN project_members pm
+      ON pm.project_id = p.id AND pm.user_id = $2
+    WHERE p.id = $1
+    `,
+    [projectId, userId]
+  );
+
+  if (result.rows.length === 0) {
+    return null;
+  }
+
+  const project = result.rows[0];
+  const isOwner = project.owner_id === userId;
+
+  return {
+    project,
+    isMember: isOwner || Boolean(project.member_role),
+  };
+};
+
 /**
- * Get project activity log
+ * Get project activity log.
  */
 export const getProjectActivity = async (req, res, next) => {
   try {
-    const { projectId } = req.params;
-    const { limit = 50, offset = 0 } = req.query;
+    const projectId = req.params.projectId;
+    const limit = parseNumber(req.query.limit, 50, 1, 100);
+    const offset = parseNumber(req.query.offset, 0, 0, 10000);
+    const access = await getProjectAccess(projectId, req.user.userId);
 
-    // Verify user is project member
-    const memberCheck = await pool.query(
-      'SELECT * FROM project_members WHERE project_id = $1 AND user_id = $2',
-      [projectId, req.user.userId]
-    );
-
-    if (memberCheck.rows.length === 0) {
-      return res.status(403).json({ success: false, message: 'Not a project member' });
+    if (!access) {
+      return res.status(404).json({
+        success: false,
+        message: 'Project not found',
+      });
     }
 
-    // Get activities
+    if (!access.isMember) {
+      return res.status(403).json({
+        success: false,
+        message: 'Access denied',
+      });
+    }
+
     const result = await pool.query(
-      `SELECT 
+      `
+      SELECT
         a.id,
         a.project_id,
         a.user_id,
@@ -33,43 +73,47 @@ export const getProjectActivity = async (req, res, next) => {
         a.entity_id,
         a.details,
         a.created_at,
-        u.name as user_name,
-        u.email as user_email
+        u.name AS user_name,
+        u.email AS user_email
       FROM activity_logs a
-      LEFT JOIN users u ON a.user_id = u.id
+      LEFT JOIN users u ON u.id = a.user_id
       WHERE a.project_id = $1
       ORDER BY a.created_at DESC
-      LIMIT $2 OFFSET $3`,
+      LIMIT $2 OFFSET $3
+      `,
       [projectId, limit, offset]
     );
 
-    // Get total count
     const countResult = await pool.query(
-      'SELECT COUNT(*) as total FROM activity_logs WHERE project_id = $1',
+      'SELECT COUNT(*)::INT AS total FROM activity_logs WHERE project_id = $1',
       [projectId]
     );
 
-    res.json({
+    return res.status(200).json({
       success: true,
-      data: result.rows,
-      total: parseInt(countResult.rows[0].total),
-      limit,
-      offset,
+      data: {
+        activity: result.rows,
+        total: countResult.rows[0].total,
+        limit,
+        offset,
+      },
     });
-  } catch (err) {
-    next(err);
+  } catch (error) {
+    next(error);
   }
 };
 
 /**
- * Get user activity log
+ * Get user activity log.
  */
 export const getUserActivity = async (req, res, next) => {
   try {
-    const { limit = 50, offset = 0 } = req.query;
+    const limit = parseNumber(req.query.limit, 50, 1, 100);
+    const offset = parseNumber(req.query.offset, 0, 0, 10000);
 
     const result = await pool.query(
-      `SELECT 
+      `
+      SELECT
         a.id,
         a.project_id,
         a.action_type,
@@ -77,44 +121,48 @@ export const getUserActivity = async (req, res, next) => {
         a.entity_id,
         a.details,
         a.created_at,
-        p.title as project_title
+        p.title AS project_title
       FROM activity_logs a
-      LEFT JOIN projects p ON a.project_id = p.id
+      LEFT JOIN projects p ON p.id = a.project_id
       WHERE a.user_id = $1
       ORDER BY a.created_at DESC
-      LIMIT $2 OFFSET $3`,
+      LIMIT $2 OFFSET $3
+      `,
       [req.user.userId, limit, offset]
     );
 
     const countResult = await pool.query(
-      'SELECT COUNT(*) as total FROM activity_logs WHERE user_id = $1',
+      'SELECT COUNT(*)::INT AS total FROM activity_logs WHERE user_id = $1',
       [req.user.userId]
     );
 
-    res.json({
+    return res.status(200).json({
       success: true,
-      data: result.rows,
-      total: parseInt(countResult.rows[0].total),
-      limit,
-      offset,
+      data: {
+        activity: result.rows,
+        total: countResult.rows[0].total,
+        limit,
+        offset,
+      },
     });
-  } catch (err) {
-    next(err);
+  } catch (error) {
+    next(error);
   }
 };
 
 /**
- * Helper: Log an activity
+ * Helper: log an activity without breaking the main request.
  */
 export const logActivity = async (projectId, userId, actionType, entityType, entityId, details = {}) => {
   try {
     await pool.query(
-      `INSERT INTO activity_logs (project_id, user_id, action_type, entity_type, entity_id, details)
-       VALUES ($1, $2, $3, $4, $5, $6)`,
+      `
+      INSERT INTO activity_logs (project_id, user_id, action_type, entity_type, entity_id, details)
+      VALUES ($1, $2, $3, $4, $5, $6::jsonb)
+      `,
       [projectId, userId, actionType, entityType, entityId, JSON.stringify(details)]
     );
-  } catch (err) {
-    console.error('Error logging activity:', err);
-    // Don't throw - activity logging shouldn't break main operations
+  } catch (error) {
+    console.error('Activity log error:', error);
   }
 };
