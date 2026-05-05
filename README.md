@@ -1,4 +1,4 @@
-# Bug Tracker
+# Bug Tracker !
 
 > A production-ready issue tracking and project management platform built on the PERN stack — PostgreSQL, Express.js, React 18, and Node.js — featuring a drag-and-drop Kanban board, role-based access control, collaborative comment threads, and a complete audit trail.
 
