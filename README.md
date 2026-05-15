@@ -775,9 +775,9 @@ curl http://localhost:5000/api/health
 
 ### Deployment fails on Render / Railway
 
-- Check the build logs on the provider dashboard for the exact error
-- Confirm all required environment variables are set in the provider's settings panel
-- See [README_DEPLOYMENT.md](./README_DEPLOYMENT.md) for provider-specific notes
+- Check the build logs on the provider dashboard for the exact error.
+- Confirm all required environment variables are set in the provider's settings panel.
+- See [README_DEPLOYMENT.md](./README_DEPLOYMENT.md) for provider-specific notes.
 
 ---
 
