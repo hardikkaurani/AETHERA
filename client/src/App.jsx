@@ -7,13 +7,11 @@ import RegisterPage from './pages/RegisterPage';
 import DashboardPage from './pages/DashboardPage';
 import ProjectPage from './pages/ProjectPage';
 import TicketDetailPage from './pages/TicketDetailPage';
+import ProfilePage from './pages/ProfilePage';
 
 /**
  * App Component
  * Main routing setup with AuthProvider
- * Day 2: Authentication routes
- * Day 3: Project routes
- * Days 4+: Ticket and other feature routes
  */
 export default function App() {
   return (
@@ -31,6 +29,15 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <DashboardPage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <ProfilePage />
               </ProtectedRoute>
             }
           />
