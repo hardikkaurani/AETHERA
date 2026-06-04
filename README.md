@@ -839,4 +839,9 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ---
 
+
+**Built with ❤️ using PERN Stack**  
+*June 2026*
+
 *Built with ❤️ using PERN Stack — June 2026*
+
