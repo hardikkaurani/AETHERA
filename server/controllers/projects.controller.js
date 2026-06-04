@@ -339,10 +339,6 @@ export const deleteProject = async (req, res, next) => {
 
     await pool.query('DELETE FROM projects WHERE id = $1', [req.params.id]);
 
-    await logActivity(req.params.id, req.user.userId, 'deleted', 'project', req.params.id, {
-      title: access.project.title,
-    });
-
     return res.status(200).json({
       success: true,
       message: 'Project deleted successfully',
