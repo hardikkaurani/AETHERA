@@ -294,4 +294,4 @@ MIT License - Open source for commercial and personal use
 ---
 
 **Built with ❤️ using PERN Stack**  
-*April 2026*
+*June 2026*
