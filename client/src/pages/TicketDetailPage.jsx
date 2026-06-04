@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import useAuth from '../hooks/useAuth';
 import useProjects from '../hooks/useProjects';
@@ -59,12 +59,24 @@ export default function TicketDetailPage() {
         due_date: data.ticket.due_date || '',
       });
 
-      const projectData = await getProject(data.ticket.project_id);
-      setProjectMembers(projectData.project.members || []);
-      setProjectRole(projectData.project.userRole);
+      // Load project context to get members and role
+      const projData = await getProject(data.ticket.project_id);
+      setProjectMembers(projData.project.members || []);
+      setProjectRole(projData.project.userRole);
     } catch (err) {
-      toast.error('Failed to load ticket');
+      toast.error('Failed to load ticket context');
       navigate('/dashboard');
+    }
+  };
+
+  const handleUpdateTicket = async () => {
+    try {
+      await updateTicket(ticketId, editData);
+      toast.success('Ticket updated');
+      setIsEditing(false);
+      await loadTicket();
+    } catch (err) {
+      toast.error(err.message);
     }
   };
 
@@ -82,51 +94,11 @@ export default function TicketDetailPage() {
     }
   };
 
-  const handleUpdateTicket = async () => {
-    try {
-      const updates = {};
-
-      if (editData.title !== currentTicket.title) updates.title = editData.title;
-      if (editData.description !== (currentTicket.description || '')) updates.description = editData.description;
-      if (editData.priority !== currentTicket.priority) updates.priority = editData.priority;
-      if (editData.type !== currentTicket.type) updates.type = editData.type;
-      if ((editData.assignee_id || null) !== currentTicket.assignee_id) {
-        updates.assignee_id = editData.assignee_id || null;
-      }
-      if ((editData.due_date || null) !== (currentTicket.due_date || null)) {
-        updates.due_date = editData.due_date || null;
-      }
-
-      if (editData.status !== currentTicket.status) {
-        await changeTicketStatus(ticketId, editData.status);
-      }
-
-      if (Object.keys(updates).length > 0) {
-        await updateTicket(ticketId, updates);
-      }
-
-      if (Object.keys(updates).length === 0 && editData.status === currentTicket.status) {
-        setIsEditing(false);
-        return;
-      }
-
-      toast.success('Ticket updated');
-      setIsEditing(false);
-      await loadTicket();
-    } catch (err) {
-      toast.error(err.message);
-    }
-  };
-
   const handleDeleteComment = async (commentId) => {
-    if (!window.confirm('Delete this comment?')) {
-      return;
-    }
-
     try {
       setDeletingCommentId(commentId);
-      await removeComment(commentId);
-      toast.success('Comment deleted');
+      await removeComment(ticketId, commentId);
+      toast.success('Comment removed');
     } catch (err) {
       toast.error(err.message);
     } finally {
@@ -136,10 +108,10 @@ export default function TicketDetailPage() {
 
   if (loading && !currentTicket) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="space-y-4">
-          <div className="w-12 h-12 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto"></div>
-          <p className="text-slate-600">Loading ticket...</p>
+      <div className="flex items-center justify-center min-h-screen bg-slate-950">
+        <div className="space-y-4 text-center">
+          <div className="w-12 h-12 border-4 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin mx-auto"></div>
+          <p className="text-slate-400">Querying issue details...</p>
         </div>
       </div>
     );
@@ -147,8 +119,16 @@ export default function TicketDetailPage() {
 
   if (!currentTicket) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <p className="text-red-600">Ticket not found</p>
+      <div className="flex items-center justify-center min-h-screen bg-slate-950">
+        <div className="text-center p-8 bg-slate-900 border border-slate-800 rounded-2xl max-w-md">
+          <p className="text-red-400 font-semibold mb-4 text-lg">Ticket not found or deleted</p>
+          <button
+            onClick={() => navigate('/dashboard')}
+            className="bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-2.5 rounded-xl font-medium transition"
+          >
+            Back to Dashboard
+          </button>
+        </div>
       </div>
     );
   }
@@ -159,57 +139,84 @@ export default function TicketDetailPage() {
     ['owner', 'admin', 'manager'].includes(projectRole);
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <header className="bg-white shadow">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex justify-between items-start">
-            <div className="flex-1">
+    <div className="min-h-screen bg-slate-950 text-slate-100 pb-12">
+      {/* Navigation bar */}
+      <nav className="border-b border-slate-900 bg-slate-900/40 backdrop-blur-md sticky top-0 z-40">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <Link
+              to={`/projects/${currentTicket.project_id}`}
+              className="text-slate-400 hover:text-white transition flex items-center gap-1.5 text-sm font-medium"
+            >
+              ← Back to Project
+            </Link>
+            <span className="text-slate-800">/</span>
+            <span className="text-slate-300 text-sm font-semibold truncate max-w-[200px]">
+              Issue #{currentTicket.id.slice(0, 8)}
+            </span>
+          </div>
+          <Link
+            to="/profile"
+            className="text-slate-300 hover:text-white text-sm font-medium bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700 px-3 py-1.5 rounded-xl transition"
+          >
+            My Profile
+          </Link>
+        </div>
+      </nav>
+
+      {/* Header Banner */}
+      <header className="bg-slate-900/60 border-b border-slate-900 py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row justify-between items-start gap-4">
+            <div className="flex-1 w-full">
               {isEditing ? (
                 <input
                   type="text"
                   value={editData.title}
                   onChange={(e) => setEditData({ ...editData, title: e.target.value })}
-                  className="text-3xl font-bold text-slate-900 w-full border border-slate-300 rounded px-2 py-1 mb-2"
+                  className="w-full text-2xl font-bold bg-slate-950 border border-slate-800 text-white rounded-xl px-4 py-2 focus:outline-none focus:border-indigo-500 mb-4"
                 />
               ) : (
-                <h1 className="text-3xl font-bold text-slate-900 mb-2">{currentTicket.title}</h1>
+                <h1 className="text-3xl font-extrabold text-white tracking-tight mb-3">
+                  {currentTicket.title}
+                </h1>
               )}
 
-              <div className="flex gap-3 flex-wrap">
-                <span className="px-3 py-1 bg-slate-100 text-slate-800 rounded-full text-sm font-medium">
+              <div className="flex gap-2 flex-wrap">
+                <span className="px-3 py-1 bg-slate-950 border border-slate-800 text-slate-300 rounded-xl text-xs font-bold uppercase tracking-wider">
                   {formatStatusLabel(currentTicket.status)}
                 </span>
                 <span
-                  className={`px-3 py-1 rounded-full text-sm font-medium ${
+                  className={`px-3 py-1 rounded-xl text-xs font-bold uppercase tracking-wider border ${
                     currentTicket.priority === 'critical'
-                      ? 'bg-red-100 text-red-800'
+                      ? 'bg-red-950/60 text-red-400 border-red-900/50'
                       : currentTicket.priority === 'high'
-                        ? 'bg-orange-100 text-orange-800'
+                        ? 'bg-orange-950/60 text-orange-400 border-orange-900/50'
                         : currentTicket.priority === 'medium'
-                          ? 'bg-yellow-100 text-yellow-800'
-                          : 'bg-green-100 text-green-800'
+                          ? 'bg-yellow-950/60 text-yellow-400 border-yellow-900/50'
+                          : 'bg-emerald-950/60 text-emerald-400 border-emerald-900/50'
                   }`}
                 >
                   {currentTicket.priority}
                 </span>
-                <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
+                <span className="px-3 py-1 bg-blue-950/60 text-blue-400 border border-blue-900/50 rounded-xl text-xs font-bold uppercase tracking-wider">
                   {currentTicket.type}
                 </span>
               </div>
             </div>
 
-            <div className="flex gap-2 ml-4">
+            <div className="flex gap-3">
               {isEditing ? (
                 <>
                   <button
                     onClick={handleUpdateTicket}
-                    className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition"
+                    className="bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-2 rounded-xl font-semibold transition shadow-lg shadow-emerald-950/20"
                   >
-                    Save
+                    Save Changes
                   </button>
                   <button
                     onClick={() => setIsEditing(false)}
-                    className="bg-slate-400 hover:bg-slate-500 text-white px-4 py-2 rounded-lg font-medium transition"
+                    className="bg-slate-800 hover:bg-slate-700 text-slate-300 px-5 py-2 rounded-xl font-semibold transition"
                   >
                     Cancel
                   </button>
@@ -219,15 +226,15 @@ export default function TicketDetailPage() {
                   {canEditTicket && (
                     <button
                       onClick={() => setIsEditing(true)}
-                      className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition"
+                      className="bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-2 rounded-xl font-semibold transition shadow-lg shadow-indigo-950/20"
                     >
-                      Edit
+                      Edit Issue
                     </button>
                   )}
                   {canDeleteTicket && (
                     <button
                       onClick={handleDeleteTicket}
-                      className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition"
+                      className="bg-red-950/60 hover:bg-red-900/60 text-red-400 border border-red-900/50 px-5 py-2 rounded-xl font-semibold transition"
                     >
                       Delete
                     </button>
@@ -239,27 +246,30 @@ export default function TicketDetailPage() {
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 space-y-6">
-            <div className="bg-white rounded-lg shadow p-6">
-              <h2 className="text-xl font-bold text-slate-900 mb-4">Description</h2>
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Main Card Columns */}
+          <div className="lg:col-span-2 space-y-8">
+            {/* Description Card */}
+            <div className="bg-slate-900 border border-slate-900/80 rounded-2xl p-6 shadow-xl">
+              <h2 className="text-lg font-bold text-white mb-4">Description</h2>
               {isEditing ? (
                 <textarea
                   value={editData.description}
                   onChange={(e) => setEditData({ ...editData, description: e.target.value })}
-                  className="w-full px-4 py-2 border border-slate-300 rounded-lg resize-none"
+                  className="w-full px-4 py-2 bg-slate-950 border border-slate-800 text-white rounded-xl focus:outline-none focus:border-indigo-500 transition resize-none"
                   rows={5}
                 />
               ) : (
-                <p className="text-slate-700 whitespace-pre-wrap">
+                <p className="text-slate-300 text-sm whitespace-pre-wrap leading-relaxed">
                   {currentTicket.description || 'No description provided'}
                 </p>
               )}
             </div>
 
-            <div className="bg-white rounded-lg shadow p-6">
-              <h2 className="text-xl font-bold text-slate-900 mb-6">Comments</h2>
+            {/* Comments Card */}
+            <div className="bg-slate-900 border border-slate-900/80 rounded-2xl p-6 shadow-xl">
+              <h2 className="text-lg font-bold text-white mb-6">Comments</h2>
 
               <CommentBox
                 onSubmit={async (body) => {
@@ -289,45 +299,46 @@ export default function TicketDetailPage() {
                   ))}
                 </div>
               ) : (
-                <p className="text-slate-500 text-center py-8">No comments yet</p>
+                <p className="text-slate-500 text-center py-8 text-sm">No comments yet</p>
               )}
             </div>
           </div>
 
+          {/* Sidebar Details Panel */}
           <div className="space-y-6">
-            <div className="bg-white rounded-lg shadow p-6">
-              <h3 className="text-lg font-bold text-slate-900 mb-4">Details</h3>
+            <div className="bg-slate-900 border border-slate-900/80 rounded-2xl p-6 shadow-xl">
+              <h3 className="text-base font-bold text-white mb-5 border-b border-slate-800 pb-3">Details</h3>
 
-              <div className="space-y-4">
+              <div className="space-y-5 text-sm">
                 <div>
-                  <label className="text-sm font-medium text-slate-600">Reporter</label>
-                  <p className="text-slate-900">{currentTicket.reporter_name}</p>
+                  <label className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Reporter</label>
+                  <p className="text-slate-200 mt-1 font-semibold">{currentTicket.reporter_name}</p>
                 </div>
 
                 <div>
-                  <label className="text-sm font-medium text-slate-600">Status</label>
+                  <label className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Status</label>
                   {isEditing ? (
                     <select
                       value={editData.status}
                       onChange={(e) => setEditData({ ...editData, status: e.target.value })}
-                      className="w-full px-2 py-1 border border-slate-300 rounded mt-1"
+                      className="w-full bg-slate-950 border border-slate-800 text-slate-350 rounded-xl px-3 py-1.5 mt-1 focus:outline-none focus:border-indigo-500"
                     >
                       <option value="todo">To Do</option>
                       <option value="in_progress">In Progress</option>
                       <option value="done">Done</option>
                     </select>
                   ) : (
-                    <p className="text-slate-900">{formatStatusLabel(currentTicket.status)}</p>
+                    <p className="text-slate-200 mt-1 font-semibold">{formatStatusLabel(currentTicket.status)}</p>
                   )}
                 </div>
 
                 <div>
-                  <label className="text-sm font-medium text-slate-600">Assignee</label>
+                  <label className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Assignee</label>
                   {isEditing ? (
                     <select
                       value={editData.assignee_id}
                       onChange={(e) => setEditData({ ...editData, assignee_id: e.target.value })}
-                      className="w-full px-2 py-1 border border-slate-300 rounded mt-1"
+                      className="w-full bg-slate-950 border border-slate-800 text-slate-350 rounded-xl px-3 py-1.5 mt-1 focus:outline-none focus:border-indigo-500"
                     >
                       <option value="">Unassigned</option>
                       {projectMembers.map((member) => (
@@ -337,40 +348,40 @@ export default function TicketDetailPage() {
                       ))}
                     </select>
                   ) : (
-                    <p className="text-slate-900">{currentTicket.assignee_name || 'Unassigned'}</p>
+                    <p className="text-slate-200 mt-1 font-semibold">{currentTicket.assignee_name || 'Unassigned'}</p>
                   )}
                 </div>
 
                 <div>
-                  <label className="text-sm font-medium text-slate-600">Due Date</label>
+                  <label className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Due Date</label>
                   {isEditing ? (
                     <input
                       type="date"
                       value={editData.due_date}
                       onChange={(e) => setEditData({ ...editData, due_date: e.target.value })}
-                      className="w-full px-2 py-1 border border-slate-300 rounded mt-1"
+                      className="w-full bg-slate-950 border border-slate-800 text-slate-350 rounded-xl px-3 py-1.5 mt-1 focus:outline-none focus:border-indigo-500"
                     />
                   ) : (
-                    <p className="text-slate-900">
+                    <p className="text-slate-200 mt-1 font-semibold">
                       {currentTicket.due_date ? new Date(currentTicket.due_date).toLocaleDateString() : 'No due date'}
                     </p>
                   )}
                 </div>
 
                 <div>
-                  <label className="text-sm font-medium text-slate-600">Created</label>
-                  <p className="text-slate-900">{new Date(currentTicket.created_at).toLocaleDateString()}</p>
+                  <label className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Created</label>
+                  <p className="text-slate-300 mt-1">{new Date(currentTicket.created_at).toLocaleDateString()}</p>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white rounded-lg shadow p-6">
-              <label className="text-sm font-medium text-slate-600">Priority</label>
+            <div className="bg-slate-900 border border-slate-900/80 rounded-2xl p-6 shadow-xl">
+              <label className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Priority Settings</label>
               {isEditing ? (
                 <select
                   value={editData.priority}
                   onChange={(e) => setEditData({ ...editData, priority: e.target.value })}
-                  className="w-full px-2 py-1 border border-slate-300 rounded mt-2"
+                  className="w-full bg-slate-950 border border-slate-800 text-slate-350 rounded-xl px-3 py-1.5 mt-2 focus:outline-none focus:border-indigo-500"
                 >
                   <option value="low">Low</option>
                   <option value="medium">Medium</option>
@@ -378,17 +389,17 @@ export default function TicketDetailPage() {
                   <option value="critical">Critical</option>
                 </select>
               ) : (
-                <p className="text-slate-900 mt-2">{currentTicket.priority}</p>
+                <p className="text-slate-200 mt-2 font-semibold text-sm capitalize">{currentTicket.priority}</p>
               )}
             </div>
 
-            <div className="bg-white rounded-lg shadow p-6">
-              <label className="text-sm font-medium text-slate-600">Type</label>
+            <div className="bg-slate-900 border border-slate-900/80 rounded-2xl p-6 shadow-xl">
+              <label className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Issue Type</label>
               {isEditing ? (
                 <select
                   value={editData.type}
                   onChange={(e) => setEditData({ ...editData, type: e.target.value })}
-                  className="w-full px-2 py-1 border border-slate-300 rounded mt-2"
+                  className="w-full bg-slate-950 border border-slate-800 text-slate-350 rounded-xl px-3 py-1.5 mt-2 focus:outline-none focus:border-indigo-500"
                 >
                   <option value="bug">Bug</option>
                   <option value="feature">Feature</option>
@@ -396,7 +407,7 @@ export default function TicketDetailPage() {
                   <option value="improvement">Improvement</option>
                 </select>
               ) : (
-                <p className="text-slate-900 mt-2">{currentTicket.type}</p>
+                <p className="text-slate-200 mt-2 font-semibold text-sm capitalize">{currentTicket.type}</p>
               )}
             </div>
           </div>
