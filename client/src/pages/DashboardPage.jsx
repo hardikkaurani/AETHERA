@@ -7,9 +7,7 @@ import CreateProjectModal from '../components/layout/CreateProjectModal';
 
 /**
  * Dashboard Page
- * Shows all projects for current user
- * Allows creating new projects
- * Navigation to individual project pages
+ * Shows all projects for current user with statistics and modern dark layout
  */
 export default function DashboardPage() {
   const { user, logout } = useAuth();
@@ -51,25 +49,38 @@ export default function DashboardPage() {
     getAllProjects();
   };
 
+  // Compute Stats
+  const totalProjects = projects.length;
+  const totalMembersCount = projects.reduce((acc, p) => acc + (p.member_count || 0), 0);
+  const adminProjects = projects.filter(p => p.role === 'admin' || p.role === 'owner').length;
+
   return (
-    <div className="min-h-screen bg-slate-50">
-      {/* Header */}
-      <header className="bg-white shadow">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex justify-between items-center">
+    <div className="min-h-screen bg-slate-950 text-slate-100 pb-16">
+      {/* Navigation / Header */}
+      <header className="border-b border-slate-900 bg-slate-900/40 backdrop-blur-md sticky top-0 z-40">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-bold text-slate-900">🐛 Bug Tracker</h1>
-            <p className="text-sm text-slate-600 mt-1">Welcome, {user?.name}!</p>
+            <h1 className="text-2xl font-extrabold tracking-tight bg-gradient-to-r from-indigo-400 via-purple-300 to-pink-400 bg-clip-text text-transparent">
+              🚀 Aethera
+            </h1>
+            <p className="text-xs text-slate-400 mt-0.5">Welcome back, {user?.name}</p>
           </div>
-          <div className="flex gap-4 items-center">
+          <div className="flex gap-3 items-center">
+            <Link
+              to="/profile"
+              className="text-slate-300 hover:text-white text-sm font-medium bg-slate-900 border border-slate-800 px-4 py-2 rounded-xl transition"
+            >
+              My Profile
+            </Link>
             <button
               onClick={() => setShowCreateModal(true)}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition"
+              className="bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-bold px-4 py-2 rounded-xl transition shadow-lg shadow-indigo-950/20"
             >
               + New Project
             </button>
             <button
               onClick={logout}
-              className="text-slate-600 hover:text-slate-900 font-medium transition"
+              className="text-slate-400 hover:text-red-400 text-sm font-medium transition ml-2"
             >
               Logout
             </button>
@@ -77,103 +88,135 @@ export default function DashboardPage() {
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      {/* Main Grid */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-10">
+        
+        {/* Statistics Cards */}
+        <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="bg-slate-900 border border-slate-900/80 rounded-2xl p-6 shadow-xl relative overflow-hidden group hover:border-slate-800 transition">
+            <div className="absolute right-4 top-4 text-3xl opacity-20">📁</div>
+            <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Projects</p>
+            <h3 className="text-3xl font-extrabold text-white mt-2">{totalProjects}</h3>
+            <p className="text-xs text-slate-500 mt-1">Assigned workspace instances</p>
+          </div>
+
+          <div className="bg-slate-900 border border-slate-900/80 rounded-2xl p-6 shadow-xl relative overflow-hidden group hover:border-slate-800 transition">
+            <div className="absolute right-4 top-4 text-3xl opacity-20">👥</div>
+            <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Active Collaborators</p>
+            <h3 className="text-3xl font-extrabold text-white mt-2">{totalMembersCount}</h3>
+            <p className="text-xs text-slate-500 mt-1">Team members across boards</p>
+          </div>
+
+          <div className="bg-slate-900 border border-slate-900/80 rounded-2xl p-6 shadow-xl relative overflow-hidden group hover:border-slate-800 transition">
+            <div className="absolute right-4 top-4 text-3xl opacity-20">🔑</div>
+            <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Owner / Admin roles</p>
+            <h3 className="text-3xl font-extrabold text-white mt-2">{adminProjects}</h3>
+            <p className="text-xs text-slate-500 mt-1">Projects under your control</p>
+          </div>
+        </section>
+
         {/* Error Alert */}
         {error && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-            <p className="text-red-800">{error}</p>
+          <div className="p-4 bg-red-950/40 border border-red-900/50 rounded-2xl">
+            <p className="text-red-400 text-sm">{error}</p>
           </div>
         )}
 
-        {/* Loading State */}
-        {loading && projects.length === 0 ? (
-          <div className="flex items-center justify-center min-h-96">
-            <div className="space-y-4">
-              <div className="w-12 h-12 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto"></div>
-              <p className="text-slate-600 text-center">Loading projects...</p>
+        {/* Projects Section */}
+        <section className="space-y-6">
+          <div className="flex justify-between items-center">
+            <h2 className="text-lg font-bold text-slate-200">All Workspaces</h2>
+          </div>
+
+          {loading && projects.length === 0 ? (
+            <div className="flex items-center justify-center min-h-64">
+              <div className="space-y-4 text-center">
+                <div className="w-10 h-10 border-4 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin mx-auto"></div>
+                <p className="text-slate-400 text-sm">Querying active projects...</p>
+              </div>
             </div>
-          </div>
-        ) : projects.length === 0 ? (
-          // Empty State
-          <div className="text-center py-12 bg-white rounded-lg border-2 border-dashed border-slate-300">
-            <div className="text-5xl mb-4">📁</div>
-            <h2 className="text-2xl font-bold text-slate-900 mb-2">No projects yet</h2>
-            <p className="text-slate-600 mb-6">Create your first project to get started</p>
-            <button
-              onClick={() => setShowCreateModal(true)}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition"
-            >
-              Create First Project
-            </button>
-          </div>
-        ) : (
-          // Projects Grid
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {projects.map((project) => (
-              <div
-                key={project.id}
-                className="bg-white rounded-lg shadow hover:shadow-lg transition border border-slate-200"
+          ) : projects.length === 0 ? (
+            // Empty State
+            <div className="text-center py-16 bg-slate-900/40 rounded-2xl border border-dashed border-slate-800">
+              <div className="text-5xl mb-4">📁</div>
+              <h2 className="text-xl font-bold text-white mb-2">No projects found</h2>
+              <p className="text-slate-400 text-sm mb-6">Create your first collaborative board to get started</p>
+              <button
+                onClick={() => setShowCreateModal(true)}
+                className="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-6 py-2.5 rounded-xl transition"
               >
-                <div className="p-6">
-                  {/* Project Title */}
-                  <h3 className="text-xl font-bold text-slate-900 mb-2 truncate">
-                    {project.title}
-                  </h3>
+                Create Workspace
+              </button>
+            </div>
+          ) : (
+            // Projects Grid
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {projects.map((project) => (
+                <div
+                  key={project.id}
+                  className="bg-slate-900 border border-slate-900/80 rounded-2xl hover:border-slate-800 transition shadow-lg flex flex-col justify-between"
+                >
+                  <div className="p-6 space-y-4">
+                    {/* Project Title */}
+                    <div>
+                      <h3 className="text-lg font-bold text-white truncate hover:text-indigo-400 transition">
+                        <Link to={`/projects/${project.id}`}>{project.title}</Link>
+                      </h3>
+                      {project.description && (
+                        <p className="text-slate-400 text-xs mt-1.5 line-clamp-2 leading-relaxed">
+                          {project.description}
+                        </p>
+                      )}
+                    </div>
 
-                  {/* Project Description */}
-                  {project.description && (
-                    <p className="text-slate-600 text-sm mb-4 line-clamp-2">
-                      {project.description}
-                    </p>
-                  )}
-
-                  {/* Project Meta */}
-                  <div className="flex items-center justify-between text-xs text-slate-500 mb-4">
-                    <span>👥 {project.member_count} members</span>
-                    <span>{new Date(project.created_at).toLocaleDateString()}</span>
-                  </div>
-
-                  {/* User Role Badge */}
-                  <div className="mb-4">
-                    <span
-                      className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${
-                        project.role === 'admin'
-                          ? 'bg-purple-100 text-purple-800'
-                          : project.role === 'manager'
-                          ? 'bg-blue-100 text-blue-800'
-                          : project.role === 'developer'
-                          ? 'bg-green-100 text-green-800'
-                          : 'bg-slate-100 text-slate-800'
-                      }`}
-                    >
-                      {project.role}
-                    </span>
-                  </div>
-
-                  {/* Actions */}
-                  <div className="flex gap-2">
-                    <Link
-                      to={`/projects/${project.id}`}
-                      className="flex-1 bg-blue-50 hover:bg-blue-100 text-blue-600 font-medium py-2 px-3 rounded text-center transition"
-                    >
-                      Open
-                    </Link>
-                    {project.role === 'owner' && (
-                      <button
-                        onClick={() => handleDeleteProject(project.id)}
-                        disabled={deletingId === project.id}
-                        className="flex-1 bg-red-50 hover:bg-red-100 text-red-600 font-medium py-2 px-3 rounded transition disabled:opacity-50 disabled:cursor-not-allowed"
+                    {/* Role Badge */}
+                    <div>
+                      <span
+                        className={`inline-block px-2.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
+                          project.role === 'admin' || project.role === 'owner'
+                            ? 'bg-purple-950 text-purple-400 border border-purple-900/50'
+                            : project.role === 'manager'
+                            ? 'bg-blue-950 text-blue-400 border border-blue-900/50'
+                            : project.role === 'developer'
+                            ? 'bg-emerald-950 text-emerald-400 border border-emerald-900/50'
+                            : 'bg-slate-900 text-slate-400 border border-slate-800'
+                        }`}
                       >
-                        {deletingId === project.id ? '...' : 'Delete'}
-                      </button>
-                    )}
+                        {project.role}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Project Footer Meta */}
+                  <div className="px-6 py-4 bg-slate-950/40 rounded-b-2xl border-t border-slate-950 flex items-center justify-between">
+                    <div className="flex gap-3 text-xs text-slate-400">
+                      <span>👥 {project.member_count}</span>
+                      <span>📅 {new Date(project.created_at).toLocaleDateString()}</span>
+                    </div>
+
+                    <div className="flex gap-2">
+                      <Link
+                        to={`/projects/${project.id}`}
+                        className="bg-indigo-600/20 text-indigo-400 hover:bg-indigo-600 hover:text-white border border-indigo-500/20 font-semibold px-3 py-1 rounded-xl text-xs transition"
+                      >
+                        Open
+                      </Link>
+                      {project.role === 'owner' && (
+                        <button
+                          onClick={() => handleDeleteProject(project.id)}
+                          disabled={deletingId === project.id}
+                          className="bg-red-950/40 text-red-400 hover:bg-red-900 hover:text-white border border-red-900/30 px-3 py-1 rounded-xl text-xs transition"
+                        >
+                          {deletingId === project.id ? 'Deleting...' : 'Delete'}
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        )}
+              ))}
+            </div>
+          )}
+        </section>
       </main>
 
       {/* Create Project Modal */}
