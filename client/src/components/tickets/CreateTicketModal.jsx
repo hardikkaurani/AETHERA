@@ -59,33 +59,33 @@ export default function CreateTicketModal({ projectId, project, onClose, onSucce
 
   return (
     // Overlay
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in">
       {/* Modal */}
-      <div className="bg-white rounded-lg shadow-xl max-w-md w-full max-h-96 overflow-y-auto">
+      <div className="bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl max-w-md w-full max-h-[85vh] flex flex-col">
         {/* Header */}
-        <div className="border-b border-slate-200 px-6 py-4 flex justify-between items-center sticky top-0 bg-white">
-          <h2 className="text-xl font-bold text-slate-900">Create New Ticket</h2>
+        <div className="border-b border-slate-800/80 px-6 py-4 flex justify-between items-center bg-slate-900 rounded-t-2xl">
+          <h2 className="text-lg font-bold text-white">Create New Ticket</h2>
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-slate-600 text-2xl leading-none"
+            className="text-slate-400 hover:text-white text-xl transition"
           >
-            ×
+            ✕
           </button>
         </div>
 
         {/* Content */}
-        <form id={formId} onSubmit={handleSubmit} className="px-6 py-4 space-y-4">
+        <form id={formId} onSubmit={handleSubmit} className="px-6 py-4 space-y-4 overflow-y-auto flex-1 text-slate-300">
           {/* Error Alert */}
           {error && (
-            <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
-              <p className="text-red-800 text-sm">{error}</p>
+            <div className="p-3 bg-red-950/40 border border-red-900/50 rounded-xl">
+              <p className="text-red-400 text-sm">{error}</p>
             </div>
           )}
 
           {/* Title Input */}
           <div>
-            <label htmlFor="title" className="block text-sm font-medium text-slate-700 mb-1">
-              Title <span className="text-red-500">*</span>
+            <label htmlFor="title" className="block text-xs font-semibold text-slate-400 uppercase tracking-wide mb-1.5">
+              Title <span className="text-red-400">*</span>
             </label>
             <input
               id="title"
@@ -94,7 +94,7 @@ export default function CreateTicketModal({ projectId, project, onClose, onSucce
               value={formData.title}
               onChange={handleChange}
               placeholder="e.g., Fix login button alignment"
-              className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+              className="w-full px-4 py-2 bg-slate-950 border border-slate-800 text-white rounded-xl focus:outline-none focus:border-indigo-500 transition"
               disabled={loading}
               maxLength={255}
             />
@@ -102,7 +102,7 @@ export default function CreateTicketModal({ projectId, project, onClose, onSucce
 
           {/* Description Input */}
           <div>
-            <label htmlFor="description" className="block text-sm font-medium text-slate-700 mb-1">
+            <label htmlFor="description" className="block text-xs font-semibold text-slate-400 uppercase tracking-wide mb-1.5">
               Description
             </label>
             <textarea
@@ -112,14 +112,14 @@ export default function CreateTicketModal({ projectId, project, onClose, onSucce
               onChange={handleChange}
               placeholder="Add more details..."
               rows={3}
-              className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition resize-none"
+              className="w-full px-4 py-2 bg-slate-950 border border-slate-800 text-white rounded-xl focus:outline-none focus:border-indigo-500 transition resize-none"
               disabled={loading}
             />
           </div>
 
           {/* Type Select */}
           <div>
-            <label htmlFor="type" className="block text-sm font-medium text-slate-700 mb-1">
+            <label htmlFor="type" className="block text-xs font-semibold text-slate-400 uppercase tracking-wide mb-1.5">
               Type
             </label>
             <select
@@ -127,7 +127,7 @@ export default function CreateTicketModal({ projectId, project, onClose, onSucce
               name="type"
               value={formData.type}
               onChange={handleChange}
-              className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+              className="w-full px-4 py-2 bg-slate-950 border border-slate-800 text-white rounded-xl focus:outline-none focus:border-indigo-500 transition"
               disabled={loading}
             >
               <option value="bug">🐛 Bug</option>
@@ -139,7 +139,7 @@ export default function CreateTicketModal({ projectId, project, onClose, onSucce
 
           {/* Priority Select */}
           <div>
-            <label htmlFor="priority" className="block text-sm font-medium text-slate-700 mb-1">
+            <label htmlFor="priority" className="block text-xs font-semibold text-slate-400 uppercase tracking-wide mb-1.5">
               Priority
             </label>
             <select
@@ -147,20 +147,20 @@ export default function CreateTicketModal({ projectId, project, onClose, onSucce
               name="priority"
               value={formData.priority}
               onChange={handleChange}
-              className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+              className="w-full px-4 py-2 bg-slate-950 border border-slate-800 text-white rounded-xl focus:outline-none focus:border-indigo-500 transition"
               disabled={loading}
             >
-              <option value="low">🟢 Low</option>
-              <option value="medium">🟡 Medium</option>
-              <option value="high">🟠 High</option>
-              <option value="critical">🔴 Critical</option>
+              <option value="low">Low</option>
+              <option value="medium">Medium</option>
+              <option value="high">High</option>
+              <option value="critical">Critical</option>
             </select>
           </div>
 
           {/* Assignee Select */}
           {project?.members && project.members.length > 0 && (
             <div>
-              <label htmlFor="assignee_id" className="block text-sm font-medium text-slate-700 mb-1">
+              <label htmlFor="assignee_id" className="block text-xs font-semibold text-slate-400 uppercase tracking-wide mb-1.5">
                 Assign To
               </label>
               <select
@@ -168,7 +168,7 @@ export default function CreateTicketModal({ projectId, project, onClose, onSucce
                 name="assignee_id"
                 value={formData.assignee_id}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                className="w-full px-4 py-2 bg-slate-950 border border-slate-800 text-white rounded-xl focus:outline-none focus:border-indigo-500 transition"
                 disabled={loading}
               >
                 <option value="">Unassigned</option>
@@ -183,7 +183,7 @@ export default function CreateTicketModal({ projectId, project, onClose, onSucce
 
           {/* Due Date Input */}
           <div>
-            <label htmlFor="due_date" className="block text-sm font-medium text-slate-700 mb-1">
+            <label htmlFor="due_date" className="block text-xs font-semibold text-slate-400 uppercase tracking-wide mb-1.5">
               Due Date
             </label>
             <input
@@ -192,18 +192,18 @@ export default function CreateTicketModal({ projectId, project, onClose, onSucce
               name="due_date"
               value={formData.due_date}
               onChange={handleChange}
-              className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+              className="w-full px-4 py-2 bg-slate-950 border border-slate-800 text-white rounded-xl focus:outline-none focus:border-indigo-500 transition"
               disabled={loading}
             />
           </div>
         </form>
 
         {/* Footer */}
-        <div className="border-t border-slate-200 px-6 py-4 flex gap-2 justify-end sticky bottom-0 bg-white">
+        <div className="border-t border-slate-800/80 px-6 py-4 flex gap-2 justify-end bg-slate-900 rounded-b-2xl">
           <button
             onClick={onClose}
             disabled={loading}
-            className="px-4 py-2 text-slate-700 border border-slate-300 rounded-lg hover:bg-slate-50 font-medium transition disabled:opacity-50"
+            className="px-4 py-2 text-slate-300 border border-slate-800 rounded-xl hover:bg-slate-800 font-medium transition"
           >
             Cancel
           </button>
@@ -211,16 +211,9 @@ export default function CreateTicketModal({ projectId, project, onClose, onSucce
             type="submit"
             form={formId}
             disabled={loading}
-            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+            className="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-semibold transition disabled:opacity-50 flex items-center gap-2"
           >
-            {loading ? (
-              <>
-                <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
-                Creating...
-              </>
-            ) : (
-              'Create Ticket'
-            )}
+            {loading ? 'Creating...' : 'Create Ticket'}
           </button>
         </div>
       </div>
