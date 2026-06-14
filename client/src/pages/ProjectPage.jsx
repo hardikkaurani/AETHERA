@@ -479,6 +479,7 @@ export default function ProjectPage() {
                     onStatusChange={handleStatusChange}
                     onTicketClick={(ticketId) => navigate(`/tickets/${ticketId}`)}
                     loading={ticketsLoading}
+                    readOnly={!canCreateTickets}
                   />
                 )
               ) : (

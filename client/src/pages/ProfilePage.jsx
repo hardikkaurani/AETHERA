@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import useAuth from '../hooks/useAuth';
 import { validatePassword } from '../utils/sanitize';
-import axios from 'axios';
+import { changePassword } from '../api/auth.api';
 
 export default function ProfilePage() {
   const navigate = useNavigate();
@@ -42,16 +42,12 @@ export default function ProfilePage() {
         throw new Error('New passwords do not match');
       }
 
-      // API request to change password (calling existing backend router or custom action)
-      // The backend auth/change-password endpoint expects currentPassword and newPassword
-      await axios.put('/api/auth/change-password', {
+      await changePassword(token, {
         currentPassword: passwordData.currentPassword,
         newPassword: passwordData.newPassword,
-      }, {
-        headers: { Authorization: `Bearer ${token}` }
       });
 
-      toast.success('Password updated successfully! 🔒');
+      toast.success('Password updated successfully');
       setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
     } catch (err) {
       toast.error(err.response?.data?.message || err.message || 'Failed to update password');

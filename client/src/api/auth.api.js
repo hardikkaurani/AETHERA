@@ -46,3 +46,19 @@ export const getMe = async (token) => {
     throw new Error(error.response?.data?.message || 'Failed to fetch user');
   }
 };
+
+/**
+ * Change current user's password.
+ */
+export const changePassword = async (token, data) => {
+  try {
+    const response = await axios.put(`${API_BASE_URL}/auth/change-password`, data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Failed to update password');
+  }
+};

@@ -9,7 +9,9 @@ import projectRoutes from './routes/projects.routes.js';
 import ticketRoutes from './routes/tickets.routes.js';
 import commentRoutes from './routes/comments.routes.js';
 import activityRoutes from './routes/activity.routes.js';
+import { assertValidEnvironment } from './config/env.js';
 
+assertValidEnvironment();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -39,8 +41,25 @@ app.use(express.urlencoded({ limit: '10mb', extended: true }));
  * Health Check Endpoint
  * Used by deployment platforms (Render, Railway, etc.) to verify app is running
  */
-app.get('/api/health', (req, res) => {
-  res.status(200).json({ success: true, message: 'Server is healthy' });
+app.get('/api/health', async (req, res) => {
+  try {
+    await pool.query('SELECT 1');
+    res.status(200).json({
+      success: true,
+      status: 'ok',
+      database: 'connected',
+      uptime: process.uptime(),
+      timestamp: new Date().toISOString(),
+    });
+  } catch (error) {
+    console.error('Health check failed:', error);
+    res.status(503).json({
+      success: false,
+      status: 'error',
+      database: 'unavailable',
+      timestamp: new Date().toISOString(),
+    });
+  }
 });
 
 /**

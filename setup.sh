@@ -62,7 +62,7 @@ if [ ! -f .env ]; then
     else
         cat > .env << EOF
 DATABASE_URL=postgresql://postgres:password@localhost:5432/bug_tracker
-JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
+JWT_SECRET=replace-with-a-64-plus-character-random-secret-before-production
 PORT=5000
 NODE_ENV=development
 CORS_ORIGIN=http://localhost:5173
@@ -116,7 +116,7 @@ if [ ! -f .env ]; then
     if [ -f .env.example ]; then
         cp .env.example .env
     else
-        echo "VITE_API_URL=http://localhost:5000" > .env
+        echo "VITE_API_BASE_URL=http://localhost:5000/api" > .env
     fi
     echo "${GREEN}✅ .env file created${NC}"
 fi

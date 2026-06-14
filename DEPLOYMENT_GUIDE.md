@@ -52,8 +52,8 @@ Create `server/.env` file:
 # Database Connection
 DATABASE_URL=postgresql://postgres:postgres@localhost:5432/bug_tracker
 
-# JWT Token (Generate: openssl rand -base64 32)
-JWT_SECRET=your-secure-random-string-here-min-32-chars
+# JWT Token (Generate: openssl rand -base64 64)
+JWT_SECRET=replace-with-a-64-plus-character-random-secret-before-production
 
 # Server
 PORT=5000
@@ -66,7 +66,7 @@ CORS_ORIGIN=http://localhost:5173
 Create `client/.env`:
 
 ```env
-VITE_API_URL=http://localhost:5000
+VITE_API_BASE_URL=http://localhost:5000/api
 ```
 
 ---
@@ -126,8 +126,9 @@ npm run dev
      ```
    - Add Environment Variables:
      ```
+     NODE_VERSION=20.19.0
      DATABASE_URL=postgresql://user:password@host:port/dbname
-     JWT_SECRET=your-prod-secret-key
+     JWT_SECRET=<64-plus-character-random-secret>
      NODE_ENV=production
      CORS_ORIGIN=https://your-frontend-url.onrender.com
      PORT=10000
@@ -161,7 +162,7 @@ npm run dev
    - Publish Directory: `client/dist`
    - Environment Variable:
      ```
-     VITE_API_URL=https://bug-tracker-api.onrender.com
+     VITE_API_BASE_URL=https://bug-tracker-api.onrender.com/api
      ```
    - Deploy!
 
@@ -240,13 +241,13 @@ docker exec -i <container_name> psql \
 
 If using cloud deployment, update:
 - `client/.env.production` with production backend URL
-- Or set `VITE_API_URL` environment variable during build
+- Or set `VITE_API_BASE_URL` environment variable during build
 
 ### Test Production Endpoints
 
 ```bash
 # Test backend health
-curl https://your-api-url/health
+curl https://your-api-url/api/health
 
 # Test database connection
 # Should be able to register/login on frontend
@@ -257,7 +258,7 @@ curl https://your-api-url/health
 - Most platforms (Render, Railway, Vercel) auto-enable HTTPS
 - Update JWT_SECRET to production-grade random string:
   ```bash
-  openssl rand -base64 32
+  openssl rand -base64 64
   ```
 
 ---
@@ -272,7 +273,7 @@ Phase 1: Database ✅
 
 Phase 2: Environment ✅
 □ server/.env created with DATABASE_URL
-□ JWT_SECRET set (32+ chars)
+□ JWT_SECRET set (64+ chars)
 □ client/.env created with API URL
 
 Phase 3: Local Testing ✅
@@ -366,5 +367,5 @@ postgresql://user:password@host:port/dbname
 
 ---
 
-**Status:** Ready for Production Deployment 🚀
+**Status:** Deployment-ready after local checks pass
 **Last Updated:** April 2026

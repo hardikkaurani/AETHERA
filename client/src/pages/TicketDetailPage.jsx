@@ -281,6 +281,7 @@ export default function TicketDetailPage() {
                   }
                 }}
                 loading={loading}
+                disabled={!canEditTicket}
               />
 
               {comments.length > 0 ? (

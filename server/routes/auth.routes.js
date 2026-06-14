@@ -1,5 +1,5 @@
 import express from 'express';
-import { register, login, getMe } from '../controllers/auth.controller.js';
+import { register, login, getMe, changePassword } from '../controllers/auth.controller.js';
 import authenticate from '../middleware/auth.middleware.js';
 import rateLimit from '../middleware/rateLimit.middleware.js';
 
@@ -30,5 +30,6 @@ router.post('/login', rateLimit, login);
  * @returns { user }
  */
 router.get('/me', authenticate, getMe);
+router.put('/change-password', authenticate, rateLimit, changePassword);
 
 export default router;

@@ -5,7 +5,7 @@
 ---
 
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Node.js](https://img.shields.io/badge/Node.js-v16%2B-green.svg)](https://nodejs.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-v20.19%2B-green.svg)](https://nodejs.org/)
 [![React](https://img.shields.io/badge/React-v18-blue.svg)](https://react.dev/)
 [![Express](https://img.shields.io/badge/Express.js-v4.18%2B-black.svg)](https://expressjs.com/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-v12%2B-336791.svg)](https://www.postgresql.org/)
@@ -345,7 +345,7 @@ stateDiagram-v2
 
 | Technology | Version | Purpose |
 |---|---|---|
-| Node.js | v16+ | JavaScript runtime |
+| Node.js | v20.19+ | JavaScript runtime |
 | Express | v4.18+ | Web framework |
 | PostgreSQL | v12+ | Primary relational datastore |
 | pg (node-postgres) | Latest | PostgreSQL client for Node.js |
@@ -442,16 +442,16 @@ bug-tracker/
 
 | Requirement | Minimum Version | Notes |
 |---|---|---|
-| Node.js | v16 | [nodejs.org](https://nodejs.org/) |
-| npm | v8 | Bundled with Node.js |
+| Node.js | v20.19 | [nodejs.org](https://nodejs.org/) |
+| npm | v10 | Bundled with Node.js |
 | PostgreSQL | v12 | [postgresql.org](https://www.postgresql.org/download) |
 | Git | Any | For cloning |
 
 Verify your environment before proceeding:
 
 ```bash
-node --version       # Must be v16+
-npm --version        # Must be v8+
+node --version       # Must be v20.19+
+npm --version        # Must be v10+
 psql --version       # Must be 12+
 ```
 
@@ -467,7 +467,7 @@ DATABASE_URL=postgresql://postgres:password@localhost:5432/bug_tracker
 
 # ── Authentication ────────────────────────────────────────────────────────────
 # Minimum 64 characters, cryptographically random in production
-JWT_SECRET=your-secret-key-here-change-in-production
+JWT_SECRET=replace-with-a-64-plus-character-random-secret-before-production
 
 # ── Server ────────────────────────────────────────────────────────────────────
 PORT=5000
@@ -480,10 +480,10 @@ CORS_ORIGIN=http://localhost:5173
 ### Client — `client/.env`
 
 ```env
-VITE_API_URL=http://localhost:5000
+VITE_API_BASE_URL=http://localhost:5000/api
 ```
 
-> **Note**: In development, the Vite proxy forwards all `/api/*` requests to `localhost:5000`, so `VITE_API_URL` is primarily used for production builds. Never commit either `.env` file. The `.env.example` files in both directories contain safe placeholder values.
+> **Note**: In development, the Vite proxy forwards all `/api/*` requests to `localhost:5000`, so `VITE_API_BASE_URL` is primarily used for production builds. Never commit either `.env` file. The `.env.example` files in both directories contain safe placeholder values.
 
 ---
 
@@ -717,7 +717,7 @@ For step-by-step instructions, see [README_DEPLOYMENT.md](./README_DEPLOYMENT.md
 |---|---|---|
 | Backend | Render.com or Railway.app | Set all env vars in the dashboard |
 | Database | Supabase or Render PostgreSQL | Run `schema.sql` after provisioning |
-| Frontend | Vercel or Netlify | Set `VITE_API_URL` to backend URL |
+| Frontend | Vercel or Netlify | Set `VITE_API_BASE_URL` to backend API URL |
 
 ### Essential Deployment Steps
 
@@ -728,7 +728,7 @@ psql <connection_string> -f server/sql/schema.sql
 
 **2. Backend** — Push to GitHub. Connect to Render or Railway. Set environment variables. Deploy.
 
-**3. Frontend** — Set `VITE_API_URL` to the production backend URL. Build and deploy:
+**3. Frontend** — Set `VITE_API_BASE_URL` to the production backend API URL. Build and deploy:
 ```bash
 cd client && npm run build
 # Upload dist/ to Vercel or Netlify

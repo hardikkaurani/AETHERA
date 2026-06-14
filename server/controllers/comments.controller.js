@@ -1,5 +1,6 @@
 import pool from '../config/db.js';
 import { logActivity } from './activity.controller.js';
+import { canWriteProjectContent } from '../utils/permissions.js';
 
 const getTicketAccess = async (ticketId, userId) => {
   const result = await pool.query(
@@ -133,6 +134,13 @@ export const createComment = async (req, res, next) => {
       return res.status(403).json({
         success: false,
         message: 'Access denied',
+      });
+    }
+
+    if (!canWriteProjectContent(access.userRole)) {
+      return res.status(403).json({
+        success: false,
+        message: 'Viewers cannot create comments',
       });
     }
 

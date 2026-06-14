@@ -1,5 +1,6 @@
 import pool from '../config/db.js';
 import { logActivity } from './activity.controller.js';
+import { canWriteProjectContent } from '../utils/permissions.js';
 
 const validPriorities = ['low', 'medium', 'high', 'critical'];
 const validTypes = ['bug', 'feature', 'task', 'improvement'];
@@ -261,6 +262,13 @@ export const createTicket = async (req, res, next) => {
       });
     }
 
+    if (!canWriteProjectContent(access.userRole)) {
+      return res.status(403).json({
+        success: false,
+        message: 'Viewers cannot create tickets',
+      });
+    }
+
     const title = req.body.title?.trim();
     const description = req.body.description?.trim() || null;
     const priority = req.body.priority?.trim().toLowerCase() || 'medium';
@@ -414,6 +422,13 @@ export const updateTicket = async (req, res, next) => {
       });
     }
 
+    if (!canWriteProjectContent(access.userRole)) {
+      return res.status(403).json({
+        success: false,
+        message: 'Viewers cannot update tickets',
+      });
+    }
+
     const updates = [];
     const values = [ticketId];
     const changedFields = {};
@@ -468,6 +483,21 @@ export const updateTicket = async (req, res, next) => {
       values.push(type);
       updates.push(`type = $${values.length}`);
       changedFields.type = type;
+    }
+
+    if (req.body.status !== undefined) {
+      const status = normalizeStatus(req.body.status);
+
+      if (!validStatuses.includes(status)) {
+        return res.status(400).json({
+          success: false,
+          message: 'Invalid status. Must be one of: todo, in-progress, done',
+        });
+      }
+
+      values.push(status);
+      updates.push(`status = $${values.length}`);
+      changedFields.status = status;
     }
 
     if (req.body.assignee_id !== undefined) {
@@ -551,6 +581,13 @@ export const updateTicketStatus = async (req, res, next) => {
       return res.status(403).json({
         success: false,
         message: 'Access denied',
+      });
+    }
+
+    if (!canWriteProjectContent(access.userRole)) {
+      return res.status(403).json({
+        success: false,
+        message: 'Viewers cannot update ticket status',
       });
     }
 
