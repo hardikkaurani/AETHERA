@@ -52,33 +52,33 @@ export default function ManageMembersModal({ projectId, onClose, onSuccess }) {
 
   return (
     // Overlay
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       {/* Modal */}
-      <div className="bg-white rounded-lg shadow-xl max-w-md w-full">
+      <div className="bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl max-w-md w-full max-h-[85vh] flex flex-col">
         {/* Header */}
-        <div className="border-b border-slate-200 px-6 py-4 flex justify-between items-center">
-          <h2 className="text-xl font-bold text-slate-900">Add Team Member</h2>
+        <div className="border-b border-slate-800/85 px-6 py-4 flex justify-between items-center bg-slate-900 rounded-t-2xl">
+          <h2 className="text-lg font-bold text-white">Add Team Member</h2>
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-slate-600 text-2xl leading-none"
+            className="text-slate-400 hover:text-white text-xl transition"
           >
-            ×
+            ✕
           </button>
         </div>
 
         {/* Content */}
-        <form id={formId} onSubmit={handleSubmit} className="px-6 py-4 space-y-4">
+        <form id={formId} onSubmit={handleSubmit} className="px-6 py-5 space-y-4 text-slate-350">
           {/* Error Alert */}
           {error && (
-            <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
-              <p className="text-red-800 text-sm">{error}</p>
+            <div className="p-3 bg-red-950/40 border border-red-900/50 rounded-xl">
+              <p className="text-red-400 text-sm">{error}</p>
             </div>
           )}
 
           {/* Email Input */}
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-1">
-              Email Address <span className="text-red-500">*</span>
+            <label htmlFor="email" className="block text-xs font-semibold text-slate-400 uppercase tracking-wide mb-1.5">
+              Email Address <span className="text-red-400">*</span>
             </label>
             <input
               id="email"
@@ -87,39 +87,39 @@ export default function ManageMembersModal({ projectId, onClose, onSuccess }) {
               value={formData.email}
               onChange={handleChange}
               placeholder="colleague@example.com"
-              className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+              className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 text-white rounded-xl focus:outline-none focus:border-indigo-500 transition placeholder:text-slate-600"
               disabled={loading}
             />
-            <p className="text-xs text-slate-500 mt-1">User must already have an account</p>
+            <p className="text-[10px] text-slate-500 mt-1">User must already have an account</p>
           </div>
 
           {/* Role Select */}
           <div>
-            <label htmlFor="role" className="block text-sm font-medium text-slate-700 mb-1">
-              Role <span className="text-red-500">*</span>
+            <label htmlFor="role" className="block text-xs font-semibold text-slate-400 uppercase tracking-wide mb-1.5">
+              Role <span className="text-red-400">*</span>
             </label>
             <select
               id="role"
               name="role"
               value={formData.role}
               onChange={handleChange}
-              className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+              className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 text-white rounded-xl focus:outline-none focus:border-indigo-500 transition"
               disabled={loading}
             >
-              <option value="viewer">👁️ Viewer - View only</option>
-              <option value="developer">👨‍💻 Developer - Create & edit issues</option>
-              <option value="manager">📋 Manager - Full access</option>
-              <option value="admin">🔑 Admin - Manage team</option>
+              <option value="viewer" className="bg-slate-900">👁️ Viewer - View only</option>
+              <option value="developer" className="bg-slate-900">👨‍💻 Developer - Create & edit issues</option>
+              <option value="manager" className="bg-slate-900">📋 Manager - Full access</option>
+              <option value="admin" className="bg-slate-900">🔑 Admin - Manage team</option>
             </select>
           </div>
         </form>
 
         {/* Footer */}
-        <div className="border-t border-slate-200 px-6 py-4 flex gap-2 justify-end">
+        <div className="border-t border-slate-800/85 px-6 py-4 flex gap-2 justify-end bg-slate-900 rounded-b-2xl">
           <button
             onClick={onClose}
             disabled={loading}
-            className="px-4 py-2 text-slate-700 border border-slate-300 rounded-lg hover:bg-slate-50 font-medium transition disabled:opacity-50"
+            className="px-4 py-2 text-slate-300 border border-slate-800 rounded-xl hover:bg-slate-850 font-medium transition"
           >
             Cancel
           </button>
@@ -127,16 +127,9 @@ export default function ManageMembersModal({ projectId, onClose, onSuccess }) {
             type="submit"
             form={formId}
             disabled={loading}
-            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+            className="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-semibold transition disabled:opacity-50 flex items-center gap-2"
           >
-            {loading ? (
-              <>
-                <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
-                Adding...
-              </>
-            ) : (
-              'Add Member'
-            )}
+            {loading ? 'Adding...' : 'Add Member'}
           </button>
         </div>
       </div>
