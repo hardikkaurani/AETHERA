@@ -204,25 +204,25 @@ export const useTickets = () => {
    * Remove comment
    */
   const removeComment = useCallback(
-    async (commentId) => {
+    async (ticketId, commentId) => {
       try {
         setLoading(true);
         setError(null);
         await commentsApi.deleteComment(token, commentId);
         setComments((prev) => prev.filter((c) => c.id !== commentId));
         setCurrentTicket((prev) =>
-          prev
+          prev && prev.id === ticketId
             ? {
                 ...prev,
                 comments: (prev.comments || []).filter((comment) => comment.id !== commentId),
-                comment_count: Math.max((prev.comment_count || 1) - 1, 0),
+                comment_count: Math.max((prev.comment_count || 0) - 1, 0),
               }
             : prev
         );
         setTickets((prev) =>
           prev.map((ticket) =>
-            currentTicket && ticket.id === currentTicket.id
-              ? { ...ticket, comment_count: Math.max((ticket.comment_count || 1) - 1, 0) }
+            ticket.id === ticketId
+              ? { ...ticket, comment_count: Math.max((ticket.comment_count || 0) - 1, 0) }
               : ticket
           )
         );
@@ -235,7 +235,7 @@ export const useTickets = () => {
         setLoading(false);
       }
     },
-    [token, currentTicket]
+    [token]
   );
 
   /**
