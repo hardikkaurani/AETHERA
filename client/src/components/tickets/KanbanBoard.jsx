@@ -6,7 +6,13 @@ import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
  * Displays tickets in 3 columns (todo, in_progress, done)
  * Supports drag-and-drop to update ticket status
  */
-export default function KanbanBoard({ tickets = [], onStatusChange, onTicketClick, loading = false }) {
+export default function KanbanBoard({
+  tickets = [],
+  onStatusChange,
+  onTicketClick,
+  loading = false,
+  readOnly = false,
+}) {
   /**
    * Group tickets by status
    */
@@ -36,8 +42,7 @@ export default function KanbanBoard({ tickets = [], onStatusChange, onTicketClic
   const handleDragEnd = async (result) => {
     const { source, destination, draggableId } = result;
 
-    // If dropped outside a droppable area
-    if (!destination) {
+    if (readOnly || !destination) {
       return;
     }
 
@@ -57,10 +62,10 @@ export default function KanbanBoard({ tickets = [], onStatusChange, onTicketClic
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-96">
+      <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center">
-          <div className="w-12 h-12 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-2"></div>
-          <p className="text-slate-600">Loading board...</p>
+          <div className="w-10 h-10 border-2 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin mx-auto mb-3"></div>
+          <p className="text-slate-400 text-sm">Loading board...</p>
         </div>
       </div>
     );
@@ -75,78 +80,77 @@ export default function KanbanBoard({ tickets = [], onStatusChange, onTicketClic
               <div
                 ref={provided.innerRef}
                 {...provided.droppableProps}
-                className={`min-h-96 rounded-lg p-4 transition ${
+                className={`min-h-[500px] rounded-2xl p-5 transition-all duration-350 border backdrop-blur-md ${
                   snapshot.isDraggingOver
-                    ? 'bg-blue-50 border-2 border-blue-400'
-                    : 'bg-slate-100 border-2 border-transparent'
+                    ? 'bg-indigo-950/25 border-indigo-500/30 shadow-[0_0_20px_rgba(99,102,241,0.05)]'
+                    : 'bg-slate-900/60 border-slate-900/60'
                 }`}
               >
-                <h3 className="font-bold text-lg text-slate-900 mb-4 flex items-center gap-2">
-                  {column.title}
-                  <span className="bg-slate-300 text-slate-700 text-xs font-semibold px-2 py-1 rounded-full">
+                <h3 className="font-extrabold text-base text-slate-200 mb-5 flex items-center justify-between">
+                  <span>{column.title}</span>
+                  <span className="bg-slate-800/80 border border-slate-700/50 text-slate-300 text-xs font-bold px-2.5 py-0.5 rounded-lg">
                     {column.tickets.length}
                   </span>
                 </h3>
 
-                <div className="space-y-3">
+                <div className="space-y-4">
                   {column.tickets.map((ticket, index) => (
-                    <Draggable key={ticket.id} draggableId={ticket.id} index={index}>
+                    <Draggable
+                      key={ticket.id}
+                      draggableId={ticket.id}
+                      index={index}
+                      isDragDisabled={readOnly}
+                    >
                       {(provided, snapshot) => (
                         <div
                           ref={provided.innerRef}
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
                           onClick={() => onTicketClick?.(ticket.id)}
-                          className={`bg-white p-4 rounded-lg border-l-4 cursor-move transition ${
-                            snapshot.isDragging
-                              ? 'shadow-lg scale-105 opacity-50'
-                              : 'shadow hover:shadow-md'
+                          className={`bg-slate-950/90 p-4 rounded-xl border border-slate-850 hover:border-slate-850 transition-all duration-205 ${
+                            readOnly ? 'cursor-pointer' : 'cursor-move'
                           } ${
-                            ticket.priority === 'critical'
-                              ? 'border-red-500'
-                              : ticket.priority === 'high'
-                              ? 'border-orange-500'
-                              : ticket.priority === 'medium'
-                              ? 'border-yellow-500'
-                              : 'border-green-500'
+                            snapshot.isDragging
+                              ? 'shadow-2xl scale-[1.03] opacity-80 border-indigo-500/50 bg-slate-900'
+                              : 'shadow-md hover:shadow-lg hover:border-slate-800 hover:translate-y-[-2px]'
                           }`}
                         >
                           <div className="flex items-start justify-between gap-2">
                             <div className="flex-1">
-                              <h4 className="font-semibold text-slate-900 text-sm line-clamp-2">
+                              <h4 className="font-bold text-slate-200 text-sm leading-snug line-clamp-2 hover:text-indigo-400 transition">
                                 {ticket.title}
                               </h4>
-                              <p className="text-xs text-slate-500 mt-1">
-                                {ticket.type} •{' '}
+                              <p className="text-[10px] text-slate-505 mt-1.5 font-semibold">
+                                {ticket.type.toUpperCase()} •{' '}
                                 {new Date(ticket.created_at).toLocaleDateString()}
                               </p>
                             </div>
                           </div>
 
-                          <div className="mt-3 flex gap-2 flex-wrap items-center">
+                          <div className="mt-4 flex gap-2 flex-wrap items-center">
                             <span
-                              className={`text-xs font-medium px-2 py-1 rounded ${
+                              className={`text-[10px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider border ${
                                 ticket.priority === 'critical'
-                                  ? 'bg-red-100 text-red-700'
+                                  ? 'bg-red-950/40 text-red-400 border-red-900/30'
                                   : ticket.priority === 'high'
-                                  ? 'bg-orange-100 text-orange-700'
+                                  ? 'bg-orange-950/40 text-orange-400 border-orange-900/30'
                                   : ticket.priority === 'medium'
-                                  ? 'bg-yellow-100 text-yellow-700'
-                                  : 'bg-green-100 text-green-700'
+                                  ? 'bg-yellow-950/40 text-yellow-400 border-yellow-900/30'
+                                  : 'bg-green-950/40 text-green-400 border-green-900/30'
                               }`}
                             >
                               {ticket.priority}
                             </span>
                             {ticket.assignee_name && (
-                              <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded">
+                              <span className="text-[10px] font-semibold bg-indigo-950/40 text-indigo-400 border border-indigo-900/30 px-2 py-0.5 rounded">
                                 👤 {ticket.assignee_name}
                               </span>
                             )}
                           </div>
 
                           {ticket.comment_count > 0 && (
-                            <div className="mt-2 text-xs text-slate-500 flex items-center gap-1">
-                              💬 {ticket.comment_count} comment{ticket.comment_count !== 1 ? 's' : ''}
+                            <div className="mt-3 pt-3 border-t border-slate-900/60 text-[11px] text-slate-400 flex items-center gap-1.5 font-medium">
+                              <span>💬</span> {ticket.comment_count} comment{ticket.comment_count !== 1 ? 's' : ''}
                             </div>
                           )}
                         </div>
@@ -158,8 +162,8 @@ export default function KanbanBoard({ tickets = [], onStatusChange, onTicketClic
                 </div>
 
                 {column.tickets.length === 0 && !provided.placeholder && (
-                  <div className="text-center py-12 text-slate-400">
-                    <p className="text-sm">No tickets here</p>
+                  <div className="text-center py-16 border border-dashed border-slate-800/80 rounded-xl bg-slate-950/10 mt-2">
+                    <p className="text-xs text-slate-500 font-medium">No tickets here</p>
                   </div>
                 )}
               </div>
