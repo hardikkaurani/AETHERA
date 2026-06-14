@@ -52,33 +52,33 @@ export default function CreateProjectModal({ onClose, onSuccess }) {
 
   return (
     // Overlay
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       {/* Modal */}
-      <div className="bg-white rounded-lg shadow-xl max-w-md w-full">
+      <div className="bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl max-w-md w-full max-h-[85vh] flex flex-col">
         {/* Header */}
-        <div className="border-b border-slate-200 px-6 py-4 flex justify-between items-center">
-          <h2 className="text-xl font-bold text-slate-900">Create New Project</h2>
+        <div className="border-b border-slate-800/85 px-6 py-4 flex justify-between items-center bg-slate-900 rounded-t-2xl">
+          <h2 className="text-lg font-bold text-white">Create New Project</h2>
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-slate-600 text-2xl leading-none"
+            className="text-slate-400 hover:text-white text-xl transition"
           >
-            ×
+            ✕
           </button>
         </div>
 
         {/* Content */}
-        <form id={formId} onSubmit={handleSubmit} className="px-6 py-4 space-y-4">
+        <form id={formId} onSubmit={handleSubmit} className="px-6 py-5 space-y-4 text-slate-350">
           {/* Error Alert */}
           {error && (
-            <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
-              <p className="text-red-800 text-sm">{error}</p>
+            <div className="p-3 bg-red-950/40 border border-red-900/50 rounded-xl">
+              <p className="text-red-400 text-sm">{error}</p>
             </div>
           )}
 
           {/* Title Input */}
           <div>
-            <label htmlFor="title" className="block text-sm font-medium text-slate-700 mb-1">
-              Project Title <span className="text-red-500">*</span>
+            <label htmlFor="title" className="block text-xs font-semibold text-slate-400 uppercase tracking-wide mb-1.5">
+              Project Title <span className="text-red-400">*</span>
             </label>
             <input
               id="title"
@@ -87,16 +87,16 @@ export default function CreateProjectModal({ onClose, onSuccess }) {
               value={formData.title}
               onChange={handleChange}
               placeholder="e.g., Mobile App Redesign"
-              className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+              className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 text-white rounded-xl focus:outline-none focus:border-indigo-500 transition placeholder:text-slate-600"
               disabled={loading}
               maxLength={150}
             />
-            <p className="text-xs text-slate-500 mt-1">{formData.title.length}/150</p>
+            <p className="text-[10px] text-slate-500 mt-1">{formData.title.length}/150</p>
           </div>
 
           {/* Description Input */}
           <div>
-            <label htmlFor="description" className="block text-sm font-medium text-slate-700 mb-1">
+            <label htmlFor="description" className="block text-xs font-semibold text-slate-400 uppercase tracking-wide mb-1.5">
               Description (Optional)
             </label>
             <textarea
@@ -106,20 +106,20 @@ export default function CreateProjectModal({ onClose, onSuccess }) {
               onChange={handleChange}
               placeholder="Brief description of your project..."
               rows={4}
-              className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition resize-none"
+              className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 text-white rounded-xl focus:outline-none focus:border-indigo-500 transition resize-none placeholder:text-slate-600"
               disabled={loading}
               maxLength={500}
             />
-            <p className="text-xs text-slate-500 mt-1">{formData.description.length}/500</p>
+            <p className="text-[10px] text-slate-500 mt-1">{formData.description.length}/500</p>
           </div>
         </form>
 
         {/* Footer */}
-        <div className="border-t border-slate-200 px-6 py-4 flex gap-2 justify-end">
+        <div className="border-t border-slate-800/85 px-6 py-4 flex gap-2 justify-end bg-slate-900 rounded-b-2xl">
           <button
             onClick={onClose}
             disabled={loading}
-            className="px-4 py-2 text-slate-700 border border-slate-300 rounded-lg hover:bg-slate-50 font-medium transition disabled:opacity-50"
+            className="px-4 py-2 text-slate-300 border border-slate-800 rounded-xl hover:bg-slate-850 font-medium transition"
           >
             Cancel
           </button>
@@ -127,16 +127,9 @@ export default function CreateProjectModal({ onClose, onSuccess }) {
             type="submit"
             form={formId}
             disabled={loading}
-            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+            className="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-semibold transition disabled:opacity-50 flex items-center gap-2"
           >
-            {loading ? (
-              <>
-                <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
-                Creating...
-              </>
-            ) : (
-              'Create Project'
-            )}
+            {loading ? 'Creating...' : 'Create Project'}
           </button>
         </div>
       </div>
