@@ -4,10 +4,13 @@
   "description": "PERN Stack Bug Tracker API",
   "main": "index.js",
   "type": "module",
+  "engines": {
+    "node": ">=20.19.0"
+  },
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node --test"
   },
   "keywords": [
     "pern",
@@ -15,8 +18,8 @@
     "express",
     "postgresql"
   ],
-  "author": "",
-  "license": "MIT",
+  "author": "Hardik Kaurani (HKaurani_01)",
+  "license": "Proprietary",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
