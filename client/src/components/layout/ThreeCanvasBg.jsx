@@ -113,7 +113,9 @@ export default function ThreeCanvasBg() {
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
     };
-    window.addEventListener('resize', handleResize);
+    
+// Binds window resize events to keep WebGL aspect ratio calibrated
+window.addEventListener('resize', handleResize);
 
     // Render loop
     let count = 0;
