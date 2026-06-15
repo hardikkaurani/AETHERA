@@ -10,7 +10,9 @@ import useProjects from '../../hooks/useProjects';
 // JSDoc: ManageMembersModal controls workspace invites and user privilege levels
 export default function ManageMembersModal({ projectId, onClose, onSuccess }) {
   const { addMember, loading, error } = useProjects();
-  const formId = 'manage-members-form';
+  
+// HTML form ID anchor for user invitation submits
+const formId = 'manage-members-form';
   const [formData, setFormData] = useState({
     email: '',
     role: 'developer',
@@ -64,7 +66,7 @@ export default function ManageMembersModal({ projectId, onClose, onSuccess }) {
             onClick={onClose}
             className="text-slate-400 hover:text-white text-xl transition"
           >
-            âœ•
+            Ã¢Å“â€¢
           </button>
         </div>
 
@@ -108,10 +110,10 @@ export default function ManageMembersModal({ projectId, onClose, onSuccess }) {
               className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 text-white rounded-xl focus:outline-none focus:border-cyan-500 transition"
               disabled={loading}
             >
-              <option value="viewer" className="bg-slate-900">ðŸ‘ï¸ Viewer - View only</option>
-              <option value="developer" className="bg-slate-900">ðŸ‘¨â€ðŸ’» Developer - Create & edit issues</option>
-              <option value="manager" className="bg-slate-900">ðŸ“‹ Manager - Full access</option>
-              <option value="admin" className="bg-slate-900">ðŸ”‘ Admin - Manage team</option>
+              <option value="viewer" className="bg-slate-900">Ã°Å¸â€˜ÂÃ¯Â¸Â Viewer - View only</option>
+              <option value="developer" className="bg-slate-900">Ã°Å¸â€˜Â¨Ã¢â‚¬ÂÃ°Å¸â€™Â» Developer - Create & edit issues</option>
+              <option value="manager" className="bg-slate-900">Ã°Å¸â€œâ€¹ Manager - Full access</option>
+              <option value="admin" className="bg-slate-900">Ã°Å¸â€â€˜ Admin - Manage team</option>
             </select>
           </div>
         </form>
