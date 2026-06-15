@@ -6,6 +6,8 @@ import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
  * Displays tickets in 3 columns (todo, in_progress, done)
  * Supports drag-and-drop to update ticket status
  */
+
+// JSDoc: KanbanBoard displays columns using react-beautiful-dnd
 export default function KanbanBoard({
   tickets = [],
   onStatusChange,
@@ -121,7 +123,7 @@ export default function KanbanBoard({
                                 {ticket.title}
                               </h4>
                               <p className="text-[10px] text-slate-505 mt-1.5 font-semibold">
-                                {ticket.type.toUpperCase()} •{' '}
+                                {ticket.type.toUpperCase()} â€¢{' '}
                                 {new Date(ticket.created_at).toLocaleDateString()}
                               </p>
                             </div>
@@ -143,14 +145,14 @@ export default function KanbanBoard({
                             </span>
                             {ticket.assignee_name && (
                               <span className="text-[10px] font-semibold bg-cyan-950/40 text-cyan-400 border border-cyan-900/30 px-2 py-0.5 rounded">
-                                👤 {ticket.assignee_name}
+                                ðŸ‘¤ {ticket.assignee_name}
                               </span>
                             )}
                           </div>
 
                           {ticket.comment_count > 0 && (
                             <div className="mt-3 pt-3 border-t border-slate-900/60 text-[11px] text-slate-400 flex items-center gap-1.5 font-medium">
-                              <span>💬</span> {ticket.comment_count} comment{ticket.comment_count !== 1 ? 's' : ''}
+                              <span>ðŸ’¬</span> {ticket.comment_count} comment{ticket.comment_count !== 1 ? 's' : ''}
                             </div>
                           )}
                         </div>
