@@ -151,7 +151,9 @@ const handleStatusChange = async (ticketId, newStatus) => {
 
   const isOwner = project?.owner_id === user?.id || project?.userRole === 'owner';
   const canManageMembers = isOwner || project?.userRole === 'admin' || project?.userRole === 'manager';
-  const canCreateTickets = project?.userRole !== 'viewer';
+  
+// Evaluates permissions: read-only for Viewer role
+const canCreateTickets = project?.userRole !== 'viewer';
 
   if (projectLoading && !project) {
     return (
@@ -190,7 +192,7 @@ const handleStatusChange = async (ticketId, newStatus) => {
               to="/dashboard"
               className="text-slate-400 hover:text-white transition flex items-center gap-1.5 text-sm font-medium"
             >
-              Ã¢â€ Â Back to Projects
+              ÃƒÂ¢Ã¢â‚¬Â Ã‚Â Back to Projects
             </Link>
             <span className="text-slate-800">/</span>
             <span className="text-slate-300 text-sm font-semibold truncate max-w-[200px]">
@@ -279,11 +281,11 @@ const handleStatusChange = async (ticketId, newStatus) => {
           </div>
 
           <div className="flex flex-wrap gap-4 text-xs text-slate-400 mt-6 pt-6 border-t border-slate-900/60">
-            <span className="flex items-center gap-1">Ã°Å¸â€˜Â¤ Created by: <strong>{project.owner_name}</strong></span>
-            <span className="text-slate-700">Ã¢â‚¬Â¢</span>
-            <span>Ã°Å¸â€œâ€¦ {new Date(project.created_at).toLocaleDateString()}</span>
-            <span className="text-slate-700">Ã¢â‚¬Â¢</span>
-            <span>Ã°Å¸â€˜Â¥ {project.members?.length || 0} Team Members</span>
+            <span className="flex items-center gap-1">ÃƒÂ°Ã…Â¸Ã¢â‚¬ËœÃ‚Â¤ Created by: <strong>{project.owner_name}</strong></span>
+            <span className="text-slate-700">ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢</span>
+            <span>ÃƒÂ°Ã…Â¸Ã¢â‚¬Å“Ã¢â‚¬Â¦ {new Date(project.created_at).toLocaleDateString()}</span>
+            <span className="text-slate-700">ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢</span>
+            <span>ÃƒÂ°Ã…Â¸Ã¢â‚¬ËœÃ‚Â¥ {project.members?.length || 0} Team Members</span>
           </div>
         </div>
       </header>
@@ -299,7 +301,7 @@ const handleStatusChange = async (ticketId, newStatus) => {
             <div className="bg-slate-900 border border-slate-900/80 rounded-2xl p-6 shadow-xl">
               <div className="flex items-center justify-between mb-5">
                 <h2 className="text-lg font-bold text-white flex items-center gap-2">
-                  <span>Ã°Å¸â€˜Â¥</span> Team Members
+                  <span>ÃƒÂ°Ã…Â¸Ã¢â‚¬ËœÃ‚Â¥</span> Team Members
                 </h2>
                 {canManageMembers && (
                   <button
@@ -352,7 +354,7 @@ const handleStatusChange = async (ticketId, newStatus) => {
             {/* Project Activity Log Section */}
             <div className="bg-slate-900 border border-slate-900/80 rounded-2xl p-6 shadow-xl">
               <h2 className="text-lg font-bold text-white mb-5 flex items-center gap-2">
-                <span>Ã¢Å¡Â¡</span> Project Activity Log
+                <span>ÃƒÂ¢Ã…Â¡Ã‚Â¡</span> Project Activity Log
               </h2>
               <ActivityFeed projectId={id} />
             </div>
@@ -377,7 +379,7 @@ const handleStatusChange = async (ticketId, newStatus) => {
                       className="w-full bg-slate-950 border border-slate-800 text-white rounded-xl pl-4 pr-10 py-2 text-sm focus:outline-none focus:border-cyan-500 transition"
                     />
                     <button type="submit" className="absolute right-3 top-2.5 text-slate-500 hover:text-cyan-400">
-                      Ã°Å¸â€Â
+                      ÃƒÂ°Ã…Â¸Ã¢â‚¬ÂÃ‚Â
                     </button>
                   </div>
                 </div>
@@ -431,7 +433,7 @@ const handleStatusChange = async (ticketId, newStatus) => {
                           : 'bg-slate-950 text-slate-400 hover:text-white border border-slate-800'
                       }`}
                     >
-                      Ã°Å¸â€œâ€¹ List Layout
+                      ÃƒÂ°Ã…Â¸Ã¢â‚¬Å“Ã¢â‚¬Â¹ List Layout
                     </button>
                     <button
                       onClick={() => setViewMode('kanban')}
@@ -441,7 +443,7 @@ const handleStatusChange = async (ticketId, newStatus) => {
                           : 'bg-slate-950 text-slate-400 hover:text-white border border-slate-800'
                       }`}
                     >
-                      Ã°Å¸â€œÅ  Kanban Board
+                      ÃƒÂ°Ã…Â¸Ã¢â‚¬Å“Ã…Â  Kanban Board
                     </button>
                   </div>
                 </div>
