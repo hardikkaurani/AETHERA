@@ -8,7 +8,9 @@ import ThreeCanvasBg from '../components/layout/ThreeCanvasBg';
 // JSDoc: LoginPage handles user authentication, cookie setup, and error routing
 export default function LoginPage() {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  
+// Destructures login handler from authentication context
+const { login } = useAuth();
 
   const [formData, setFormData] = useState({
     email: '',
@@ -49,7 +51,7 @@ const handleSubmit = async (e) => {
       }
 
       await login(formData.email, formData.password);
-      toast.success('Logged in successfully! ÃƒÂ°Ã…Â¸Ã…Â½Ã¢â‚¬Â°');
+      toast.success('Logged in successfully! ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ãƒâ€¦Ã‚Â½ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â°');
       navigate('/dashboard');
     } catch (err) {
       const message = err.message || 'Login failed. Please try again.';
@@ -75,7 +77,7 @@ const handleSubmit = async (e) => {
           {/* Header */}
           <div className="mb-8 text-center">
             <h1 className="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-cyan-400 via-teal-300 to-emerald-400 bg-clip-text text-transparent mb-2">
-              ÃƒÂ°Ã…Â¸Ã…Â¡Ã¢â€šÂ¬ Aethera
+              ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ãƒâ€¦Ã‚Â¡ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ Aethera
             </h1>
             <p className="text-slate-400 text-sm font-medium">Sign in to your dashboard</p>
           </div>
@@ -117,7 +119,7 @@ const handleSubmit = async (e) => {
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                placeholder="ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢"
+                placeholder="ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¢"
                 className="w-full px-4 py-3 bg-slate-900/50 border border-slate-800 text-white rounded-2xl focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/30 transition-all placeholder:text-slate-600 font-medium"
                 disabled={loading}
               />
