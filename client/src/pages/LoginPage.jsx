@@ -18,7 +18,9 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const handleChange = (e) => {
+  
+// Updates form data values dynamically and resets validation error alerts
+const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -47,7 +49,7 @@ const handleSubmit = async (e) => {
       }
 
       await login(formData.email, formData.password);
-      toast.success('Logged in successfully! Ã°Å¸Å½â€°');
+      toast.success('Logged in successfully! ÃƒÂ°Ã…Â¸Ã…Â½Ã¢â‚¬Â°');
       navigate('/dashboard');
     } catch (err) {
       const message = err.message || 'Login failed. Please try again.';
@@ -73,7 +75,7 @@ const handleSubmit = async (e) => {
           {/* Header */}
           <div className="mb-8 text-center">
             <h1 className="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-cyan-400 via-teal-300 to-emerald-400 bg-clip-text text-transparent mb-2">
-              Ã°Å¸Å¡â‚¬ Aethera
+              ÃƒÂ°Ã…Â¸Ã…Â¡Ã¢â€šÂ¬ Aethera
             </h1>
             <p className="text-slate-400 text-sm font-medium">Sign in to your dashboard</p>
           </div>
@@ -115,7 +117,7 @@ const handleSubmit = async (e) => {
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                placeholder="Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢"
+                placeholder="ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢"
                 className="w-full px-4 py-3 bg-slate-900/50 border border-slate-800 text-white rounded-2xl focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/30 transition-all placeholder:text-slate-600 font-medium"
                 disabled={loading}
               />
