@@ -71,7 +71,9 @@ export default function TicketDetailPage() {
     }
   };
 
-  const handleUpdateTicket = async () => {
+  
+// Commits modified fields to the database and re-fetches logs
+const handleUpdateTicket = async () => {
     try {
       await updateTicket(ticketId, editData);
       toast.success('Ticket updated');
@@ -150,7 +152,7 @@ export default function TicketDetailPage() {
               to={`/projects/${currentTicket.project_id}`}
               className="text-slate-400 hover:text-white transition flex items-center gap-1.5 text-sm font-medium"
             >
-              â† Back to Project
+              Ã¢â€ Â Back to Project
             </Link>
             <span className="text-slate-800">/</span>
             <span className="text-slate-300 text-sm font-semibold truncate max-w-[200px]">
