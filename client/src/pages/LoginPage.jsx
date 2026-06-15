@@ -4,6 +4,8 @@ import toast from 'react-hot-toast';
 import useAuth from '../hooks/useAuth';
 import ThreeCanvasBg from '../components/layout/ThreeCanvasBg';
 
+
+// JSDoc: LoginPage handles user authentication, cookie setup, and error routing
 export default function LoginPage() {
   const navigate = useNavigate();
   const { login } = useAuth();
@@ -43,7 +45,7 @@ export default function LoginPage() {
       }
 
       await login(formData.email, formData.password);
-      toast.success('Logged in successfully! 🎉');
+      toast.success('Logged in successfully! ðŸŽ‰');
       navigate('/dashboard');
     } catch (err) {
       const message = err.message || 'Login failed. Please try again.';
@@ -69,7 +71,7 @@ export default function LoginPage() {
           {/* Header */}
           <div className="mb-8 text-center">
             <h1 className="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-cyan-400 via-teal-300 to-emerald-400 bg-clip-text text-transparent mb-2">
-              🚀 Aethera
+              ðŸš€ Aethera
             </h1>
             <p className="text-slate-400 text-sm font-medium">Sign in to your dashboard</p>
           </div>
@@ -111,7 +113,7 @@ export default function LoginPage() {
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                placeholder="••••••••"
+                placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
                 className="w-full px-4 py-3 bg-slate-900/50 border border-slate-800 text-white rounded-2xl focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/30 transition-all placeholder:text-slate-600 font-medium"
                 disabled={loading}
               />
