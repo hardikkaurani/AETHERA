@@ -8,6 +8,8 @@ import * as authApi from '../api/auth.api';
  */
 export const AuthContext = createContext();
 
+
+// AuthProvider injects authentication services and token validation globally
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
