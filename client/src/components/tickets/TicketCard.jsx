@@ -23,7 +23,9 @@ const getPriorityColor = (priority) => {
     }
   };
 
-  const getStatusColor = (status) => {
+  
+// Maps backend status tags to modern glow class structures
+const getStatusColor = (status) => {
     switch (status) {
       case 'todo':
         return 'bg-slate-900 text-slate-300 border border-slate-800/80';
@@ -39,15 +41,15 @@ const getPriorityColor = (priority) => {
   const getTypeIcon = (type) => {
     switch (type) {
       case 'bug':
-        return 'Ã°Å¸Ââ€º';
+        return 'ÃƒÂ°Ã…Â¸Ã‚ÂÃ¢â‚¬Âº';
       case 'feature':
-        return 'Ã¢Å“Â¨';
+        return 'ÃƒÂ¢Ã…â€œÃ‚Â¨';
       case 'task':
-        return 'Ã¢Å“â€œ';
+        return 'ÃƒÂ¢Ã…â€œÃ¢â‚¬Å“';
       case 'improvement':
-        return 'Ã°Å¸â€œË†';
+        return 'ÃƒÂ°Ã…Â¸Ã¢â‚¬Å“Ã‹â€ ';
       default:
-        return 'Ã°Å¸â€œÂ';
+        return 'ÃƒÂ°Ã…Â¸Ã¢â‚¬Å“Ã‚Â';
     }
   };
 
@@ -84,18 +86,18 @@ const getPriorityColor = (priority) => {
         <div className="space-y-2 text-xs text-slate-450 mb-4 pt-3 border-t border-slate-950/40">
           {ticket.assignee_name && (
             <div className="flex items-center gap-2">
-              <span>Ã°Å¸â€˜Â¤</span>
+              <span>ÃƒÂ°Ã…Â¸Ã¢â‚¬ËœÃ‚Â¤</span>
               <span>Assigned to: <span className="text-slate-300 font-medium">{ticket.assignee_name}</span></span>
             </div>
           )}
           {ticket.due_date && (
             <div className="flex items-center gap-2">
-              <span>Ã°Å¸â€œâ€¦</span>
+              <span>ÃƒÂ°Ã…Â¸Ã¢â‚¬Å“Ã¢â‚¬Â¦</span>
               <span>Due: <span className="text-slate-300 font-medium">{new Date(ticket.due_date).toLocaleDateString()}</span></span>
             </div>
           )}
           <div className="flex items-center gap-2">
-            <span>Ã°Å¸â€™Â¬</span>
+            <span>ÃƒÂ°Ã…Â¸Ã¢â‚¬â„¢Ã‚Â¬</span>
             <span>{ticket.comment_count || 0} comments</span>
           </div>
         </div>
