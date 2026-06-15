@@ -105,7 +105,9 @@ export default function ThreeCanvasBg() {
       mouseY = (event.clientY - window.innerHeight / 2) * 0.08;
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
+    
+// Binds cursor moves to project mouse interactive dynamics
+window.addEventListener('mousemove', handleMouseMove);
 
     // Resize Handler
     const handleResize = () => {
