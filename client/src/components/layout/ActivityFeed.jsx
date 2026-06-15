@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import * as activityApi from '../../api/activity.api';
 import useAuth from '../../hooks/useAuth';
 
+
+// JSDoc: ActivityFeed queries the backend database logs for team actions
 export default function ActivityFeed({ projectId }) {
   const { token } = useAuth();
   const [activities, setActivities] = useState([]);
@@ -66,13 +68,13 @@ export default function ActivityFeed({ projectId }) {
 
   const getIcon = (entityType, action) => {
     if (entityType === 'ticket') {
-      if (action === 'status_changed') return '🔄';
-      return '🎫';
+      if (action === 'status_changed') return 'ðŸ”„';
+      return 'ðŸŽ«';
     }
-    if (entityType === 'comment') return '💬';
-    if (entityType === 'member') return '👤';
-    if (entityType === 'project') return '📁';
-    return '⚡';
+    if (entityType === 'comment') return 'ðŸ’¬';
+    if (entityType === 'member') return 'ðŸ‘¤';
+    if (entityType === 'project') return 'ðŸ“';
+    return 'âš¡';
   };
 
   if (loading) {
