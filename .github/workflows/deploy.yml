@@ -1,25 +1,30 @@
-name: Deploy Frontend to Vercel
+name: Register Deployment on GitHub
 
 on:
   push:
     branches:
       - main
-    paths:
-      - 'client/**'
+
+permissions:
+  deployments: write
+  contents: read
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Deploy to Vercel
-        uses: amondnet/vercel-action@v25
+      - name: Start Deployment
+        uses: bobheadxi/deployments@v1
+        id: deployment
         with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          vercel-args: '--prod'
-          working-directory: ./client
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          step: start
+          env: Production
+
+      - name: Update Deployment Status
+        uses: bobheadxi/deployments@v1
+        with:
+          step: finish
+          status: success
+          env: Production
+          deployment_id: ${{ steps.deployment.outputs.deployment_id }}
+          env_url: https://aethera.vercel.app
