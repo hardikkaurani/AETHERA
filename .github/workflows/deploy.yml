@@ -12,6 +12,9 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: Production
+      url: https://aethera.vercel.app
     steps:
       - name: Start Deployment
         uses: bobheadxi/deployments@v1
