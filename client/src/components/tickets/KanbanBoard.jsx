@@ -64,7 +64,7 @@ export default function KanbanBoard({
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center">
-          <div className="w-10 h-10 border-2 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin mx-auto mb-3"></div>
+          <div className="w-10 h-10 border-2 border-cyan-500/20 border-t-cyan-500 rounded-full animate-spin mx-auto mb-3"></div>
           <p className="text-slate-400 text-sm">Loading board...</p>
         </div>
       </div>
@@ -82,7 +82,7 @@ export default function KanbanBoard({
                 {...provided.droppableProps}
                 className={`min-h-[500px] rounded-2xl p-5 transition-all duration-350 border backdrop-blur-md ${
                   snapshot.isDraggingOver
-                    ? 'bg-indigo-950/25 border-indigo-500/30 shadow-[0_0_20px_rgba(99,102,241,0.05)]'
+                    ? 'bg-cyan-950/25 border-cyan-500/30 shadow-[0_0_20px_rgba(6,182,212,0.05)]'
                     : 'bg-slate-900/60 border-slate-900/60'
                 }`}
               >
@@ -111,13 +111,13 @@ export default function KanbanBoard({
                             readOnly ? 'cursor-pointer' : 'cursor-move'
                           } ${
                             snapshot.isDragging
-                              ? 'shadow-2xl scale-[1.03] opacity-80 border-indigo-500/50 bg-slate-900'
+                              ? 'shadow-2xl scale-[1.03] opacity-80 border-cyan-500/50 bg-slate-900'
                               : 'shadow-md hover:shadow-lg hover:border-slate-800 hover:translate-y-[-2px]'
                           }`}
                         >
                           <div className="flex items-start justify-between gap-2">
                             <div className="flex-1">
-                              <h4 className="font-bold text-slate-200 text-sm leading-snug line-clamp-2 hover:text-indigo-400 transition">
+                              <h4 className="font-bold text-slate-200 text-sm leading-snug line-clamp-2 hover:text-cyan-400 transition">
                                 {ticket.title}
                               </h4>
                               <p className="text-[10px] text-slate-505 mt-1.5 font-semibold">
@@ -142,7 +142,7 @@ export default function KanbanBoard({
                               {ticket.priority}
                             </span>
                             {ticket.assignee_name && (
-                              <span className="text-[10px] font-semibold bg-indigo-950/40 text-indigo-400 border border-indigo-900/30 px-2 py-0.5 rounded">
+                              <span className="text-[10px] font-semibold bg-cyan-950/40 text-cyan-400 border border-cyan-900/30 px-2 py-0.5 rounded">
                                 👤 {ticket.assignee_name}
                               </span>
                             )}
