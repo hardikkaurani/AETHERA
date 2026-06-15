@@ -32,7 +32,9 @@ export default function RegisterPage() {
     }
   };
 
-  const handleSubmit = async (e) => {
+  
+// Dispatches registration API calls and verifies password strength
+const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
@@ -57,7 +59,7 @@ export default function RegisterPage() {
       }
 
       await register(formData.name, formData.email, formData.password);
-      toast.success('Registration successful! Please sign in. ðŸŽ‰');
+      toast.success('Registration successful! Please sign in. Ã°Å¸Å½â€°');
       navigate('/login');
     } catch (err) {
       const message = err.message || 'Registration failed. Please try again.';
@@ -83,7 +85,7 @@ export default function RegisterPage() {
           {/* Header */}
           <div className="mb-8 text-center">
             <h1 className="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-cyan-400 via-teal-300 to-emerald-400 bg-clip-text text-transparent mb-2">
-              ðŸš€ Aethera
+              Ã°Å¸Å¡â‚¬ Aethera
             </h1>
             <p className="text-slate-400 text-sm font-medium">Create your developer workspace</p>
           </div>
@@ -142,7 +144,7 @@ export default function RegisterPage() {
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+                placeholder="Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢"
                 className="w-full px-4 py-2.5 bg-slate-900/50 border border-slate-800 text-white rounded-2xl focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/30 transition-all placeholder:text-slate-600 font-medium text-sm"
                 disabled={loading}
               />
@@ -159,7 +161,7 @@ export default function RegisterPage() {
                 name="confirmPassword"
                 value={formData.confirmPassword}
                 onChange={handleChange}
-                placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+                placeholder="Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢"
                 className="w-full px-4 py-2.5 bg-slate-900/50 border border-slate-800 text-white rounded-2xl focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/30 transition-all placeholder:text-slate-600 font-medium text-sm"
                 disabled={loading}
               />
