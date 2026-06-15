@@ -87,7 +87,7 @@ export default function CreateProjectModal({ onClose, onSuccess }) {
               value={formData.title}
               onChange={handleChange}
               placeholder="e.g., Mobile App Redesign"
-              className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 text-white rounded-xl focus:outline-none focus:border-indigo-500 transition placeholder:text-slate-600"
+              className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 text-white rounded-xl focus:outline-none focus:border-cyan-500 transition placeholder:text-slate-600"
               disabled={loading}
               maxLength={150}
             />
@@ -106,7 +106,7 @@ export default function CreateProjectModal({ onClose, onSuccess }) {
               onChange={handleChange}
               placeholder="Brief description of your project..."
               rows={4}
-              className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 text-white rounded-xl focus:outline-none focus:border-indigo-500 transition resize-none placeholder:text-slate-600"
+              className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 text-white rounded-xl focus:outline-none focus:border-cyan-500 transition resize-none placeholder:text-slate-600"
               disabled={loading}
               maxLength={500}
             />
@@ -127,7 +127,7 @@ export default function CreateProjectModal({ onClose, onSuccess }) {
             type="submit"
             form={formId}
             disabled={loading}
-            className="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-semibold transition disabled:opacity-50 flex items-center gap-2"
+            className="px-5 py-2 bg-gradient-to-r from-cyan-600 to-teal-650 hover:from-cyan-500 hover:to-teal-555 text-white rounded-xl font-semibold transition disabled:opacity-50 flex items-center gap-2"
           >
             {loading ? 'Creating...' : 'Create Project'}
           </button>
