@@ -24,7 +24,7 @@ export default function TicketCard({ ticket, onClick, onDelete }) {
       case 'todo':
         return 'bg-slate-900 text-slate-300 border border-slate-800/80';
       case 'in_progress':
-        return 'bg-indigo-950/40 text-indigo-400 border border-indigo-900/30';
+        return 'bg-cyan-950/40 text-cyan-400 border border-cyan-900/30';
       case 'done':
         return 'bg-green-950/40 text-green-400 border border-green-900/30';
       default:
@@ -67,7 +67,7 @@ export default function TicketCard({ ticket, onClick, onDelete }) {
         </div>
 
         {/* Title */}
-        <h3 className="font-bold text-slate-200 mb-2 line-clamp-2 hover:text-indigo-400 transition text-sm leading-snug">{ticket.title}</h3>
+        <h3 className="font-bold text-slate-200 mb-2 line-clamp-2 hover:text-cyan-400 transition text-sm leading-snug">{ticket.title}</h3>
 
         {/* Description Preview */}
         {ticket.description && (
