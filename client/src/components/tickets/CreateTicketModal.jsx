@@ -10,7 +10,9 @@ import useTickets from '../../hooks/useTickets';
 // JSDoc: CreateTicketModal displays forms to compile issue details
 export default function CreateTicketModal({ projectId, project, onClose, onSuccess }) {
   const { createNewTicket, loading, error } = useTickets();
-  const formId = 'create-ticket-form';
+  
+// HTML form ID anchor to submit the modal form remotely
+const formId = 'create-ticket-form';
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -54,7 +56,7 @@ const handleSubmit = async (e) => {
         due_date: formData.due_date || null,
       });
 
-      toast.success('Ticket created successfully! Ã°Å¸Å½â€°');
+      toast.success('Ticket created successfully! ÃƒÂ°Ã…Â¸Ã…Â½Ã¢â‚¬Â°');
       onSuccess();
     } catch (err) {
       toast.error(err.message || 'Failed to create ticket');
@@ -73,7 +75,7 @@ const handleSubmit = async (e) => {
             onClick={onClose}
             className="text-slate-400 hover:text-white text-xl transition"
           >
-            Ã¢Å“â€¢
+            ÃƒÂ¢Ã…â€œÃ¢â‚¬Â¢
           </button>
         </div>
 
@@ -134,10 +136,10 @@ const handleSubmit = async (e) => {
               className="w-full px-4 py-2 bg-slate-950 border border-slate-800 text-white rounded-xl focus:outline-none focus:border-cyan-500 transition"
               disabled={loading}
             >
-              <option value="bug">Ã°Å¸Ââ€º Bug</option>
-              <option value="feature">Ã¢Å“Â¨ Feature</option>
-              <option value="task">Ã¢Å“â€œ Task</option>
-              <option value="improvement">Ã°Å¸â€œË† Improvement</option>
+              <option value="bug">ÃƒÂ°Ã…Â¸Ã‚ÂÃ¢â‚¬Âº Bug</option>
+              <option value="feature">ÃƒÂ¢Ã…â€œÃ‚Â¨ Feature</option>
+              <option value="task">ÃƒÂ¢Ã…â€œÃ¢â‚¬Å“ Task</option>
+              <option value="improvement">ÃƒÂ°Ã…Â¸Ã¢â‚¬Å“Ã‹â€  Improvement</option>
             </select>
           </div>
 
