@@ -78,7 +78,7 @@ export default function ActivityFeed({ projectId }) {
   if (loading) {
     return (
       <div className="flex justify-center py-6">
-        <div className="w-6 h-6 border-2 border-indigo-400 border-t-indigo-600 rounded-full animate-spin"></div>
+        <div className="w-6 h-6 border-2 border-cyan-400 border-t-cyan-600 rounded-full animate-spin"></div>
       </div>
     );
   }
