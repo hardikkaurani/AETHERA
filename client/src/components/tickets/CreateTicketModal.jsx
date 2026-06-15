@@ -34,7 +34,9 @@ export default function CreateTicketModal({ projectId, project, onClose, onSucce
   /**
    * Handle form submission
    */
-  const handleSubmit = async (e) => {
+  
+// Sanity check inputs and passes metadata to submit endpoint
+const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
@@ -52,7 +54,7 @@ export default function CreateTicketModal({ projectId, project, onClose, onSucce
         due_date: formData.due_date || null,
       });
 
-      toast.success('Ticket created successfully! ðŸŽ‰');
+      toast.success('Ticket created successfully! Ã°Å¸Å½â€°');
       onSuccess();
     } catch (err) {
       toast.error(err.message || 'Failed to create ticket');
@@ -71,7 +73,7 @@ export default function CreateTicketModal({ projectId, project, onClose, onSucce
             onClick={onClose}
             className="text-slate-400 hover:text-white text-xl transition"
           >
-            âœ•
+            Ã¢Å“â€¢
           </button>
         </div>
 
@@ -132,10 +134,10 @@ export default function CreateTicketModal({ projectId, project, onClose, onSucce
               className="w-full px-4 py-2 bg-slate-950 border border-slate-800 text-white rounded-xl focus:outline-none focus:border-cyan-500 transition"
               disabled={loading}
             >
-              <option value="bug">ðŸ› Bug</option>
-              <option value="feature">âœ¨ Feature</option>
-              <option value="task">âœ“ Task</option>
-              <option value="improvement">ðŸ“ˆ Improvement</option>
+              <option value="bug">Ã°Å¸Ââ€º Bug</option>
+              <option value="feature">Ã¢Å“Â¨ Feature</option>
+              <option value="task">Ã¢Å“â€œ Task</option>
+              <option value="improvement">Ã°Å¸â€œË† Improvement</option>
             </select>
           </div>
 
