@@ -6,6 +6,8 @@ import useProjects from '../../hooks/useProjects';
  * Manage Members Modal
  * Add new members to project by email
  */
+
+// JSDoc: ManageMembersModal controls workspace invites and user privilege levels
 export default function ManageMembersModal({ projectId, onClose, onSuccess }) {
   const { addMember, loading, error } = useProjects();
   const formId = 'manage-members-form';
@@ -62,7 +64,7 @@ export default function ManageMembersModal({ projectId, onClose, onSuccess }) {
             onClick={onClose}
             className="text-slate-400 hover:text-white text-xl transition"
           >
-            ✕
+            âœ•
           </button>
         </div>
 
@@ -106,10 +108,10 @@ export default function ManageMembersModal({ projectId, onClose, onSuccess }) {
               className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 text-white rounded-xl focus:outline-none focus:border-cyan-500 transition"
               disabled={loading}
             >
-              <option value="viewer" className="bg-slate-900">👁️ Viewer - View only</option>
-              <option value="developer" className="bg-slate-900">👨‍💻 Developer - Create & edit issues</option>
-              <option value="manager" className="bg-slate-900">📋 Manager - Full access</option>
-              <option value="admin" className="bg-slate-900">🔑 Admin - Manage team</option>
+              <option value="viewer" className="bg-slate-900">ðŸ‘ï¸ Viewer - View only</option>
+              <option value="developer" className="bg-slate-900">ðŸ‘¨â€ðŸ’» Developer - Create & edit issues</option>
+              <option value="manager" className="bg-slate-900">ðŸ“‹ Manager - Full access</option>
+              <option value="admin" className="bg-slate-900">ðŸ”‘ Admin - Manage team</option>
             </select>
           </div>
         </form>
