@@ -6,6 +6,8 @@ import useTickets from '../../hooks/useTickets';
  * CreateTicketModal
  * Form to create a new ticket in a project
  */
+
+// JSDoc: CreateTicketModal displays forms to compile issue details
 export default function CreateTicketModal({ projectId, project, onClose, onSuccess }) {
   const { createNewTicket, loading, error } = useTickets();
   const formId = 'create-ticket-form';
@@ -50,7 +52,7 @@ export default function CreateTicketModal({ projectId, project, onClose, onSucce
         due_date: formData.due_date || null,
       });
 
-      toast.success('Ticket created successfully! 🎉');
+      toast.success('Ticket created successfully! ðŸŽ‰');
       onSuccess();
     } catch (err) {
       toast.error(err.message || 'Failed to create ticket');
@@ -69,7 +71,7 @@ export default function CreateTicketModal({ projectId, project, onClose, onSucce
             onClick={onClose}
             className="text-slate-400 hover:text-white text-xl transition"
           >
-            ✕
+            âœ•
           </button>
         </div>
 
@@ -130,10 +132,10 @@ export default function CreateTicketModal({ projectId, project, onClose, onSucce
               className="w-full px-4 py-2 bg-slate-950 border border-slate-800 text-white rounded-xl focus:outline-none focus:border-cyan-500 transition"
               disabled={loading}
             >
-              <option value="bug">🐛 Bug</option>
-              <option value="feature">✨ Feature</option>
-              <option value="task">✓ Task</option>
-              <option value="improvement">📈 Improvement</option>
+              <option value="bug">ðŸ› Bug</option>
+              <option value="feature">âœ¨ Feature</option>
+              <option value="task">âœ“ Task</option>
+              <option value="improvement">ðŸ“ˆ Improvement</option>
             </select>
           </div>
 
