@@ -1,6 +1,8 @@
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 
+
+// JSDoc: ThreeCanvasBg renders a responsive WebGL background
 export default function ThreeCanvasBg() {
   const containerRef = useRef(null);
 
