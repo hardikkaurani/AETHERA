@@ -110,7 +110,7 @@ export default function TicketDetailPage() {
     return (
       <div className="flex items-center justify-center min-h-screen bg-slate-950">
         <div className="space-y-4 text-center">
-          <div className="w-12 h-12 border-4 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin mx-auto"></div>
+          <div className="w-12 h-12 border-4 border-cyan-500/20 border-t-cyan-500 rounded-full animate-spin mx-auto"></div>
           <p className="text-slate-400">Querying issue details...</p>
         </div>
       </div>
@@ -124,7 +124,7 @@ export default function TicketDetailPage() {
           <p className="text-red-400 font-semibold mb-4 text-lg">Ticket not found or deleted</p>
           <button
             onClick={() => navigate('/dashboard')}
-            className="bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-2.5 rounded-xl font-medium transition"
+            className="bg-gradient-to-r from-cyan-600 to-teal-650 hover:from-cyan-500 hover:to-teal-555 text-white px-6 py-2.5 rounded-xl font-medium transition"
           >
             Back to Dashboard
           </button>
@@ -174,7 +174,7 @@ export default function TicketDetailPage() {
                   type="text"
                   value={editData.title}
                   onChange={(e) => setEditData({ ...editData, title: e.target.value })}
-                  className="w-full text-2xl font-bold bg-slate-950 border border-slate-800 text-white rounded-xl px-4 py-2 focus:outline-none focus:border-indigo-500 mb-4"
+                  className="w-full text-2xl font-bold bg-slate-950 border border-slate-800 text-white rounded-xl px-4 py-2 focus:outline-none focus:border-cyan-500 mb-4 focus:ring-1 focus:ring-cyan-500/35"
                 />
               ) : (
                 <h1 className="text-3xl font-extrabold text-white tracking-tight mb-3">
@@ -226,7 +226,7 @@ export default function TicketDetailPage() {
                   {canEditTicket && (
                     <button
                       onClick={() => setIsEditing(true)}
-                      className="bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-2 rounded-xl font-semibold transition shadow-lg shadow-indigo-950/20"
+                      className="bg-gradient-to-r from-cyan-600 to-teal-650 hover:from-cyan-500 hover:to-teal-555 text-white px-5 py-2 rounded-xl font-semibold transition shadow-lg shadow-cyan-950/20"
                     >
                       Edit Issue
                     </button>
@@ -257,7 +257,7 @@ export default function TicketDetailPage() {
                 <textarea
                   value={editData.description}
                   onChange={(e) => setEditData({ ...editData, description: e.target.value })}
-                  className="w-full px-4 py-2 bg-slate-950 border border-slate-800 text-white rounded-xl focus:outline-none focus:border-indigo-500 transition resize-none"
+                  className="w-full px-4 py-2 bg-slate-950 border border-slate-800 text-white rounded-xl focus:outline-none focus:border-cyan-500 transition resize-none focus:ring-1 focus:ring-cyan-500/35"
                   rows={5}
                 />
               ) : (
@@ -322,7 +322,7 @@ export default function TicketDetailPage() {
                     <select
                       value={editData.status}
                       onChange={(e) => setEditData({ ...editData, status: e.target.value })}
-                      className="w-full bg-slate-950 border border-slate-800 text-slate-350 rounded-xl px-3 py-1.5 mt-1 focus:outline-none focus:border-indigo-500"
+                      className="w-full bg-slate-950 border border-slate-800 text-slate-350 rounded-xl px-3 py-1.5 mt-1 focus:outline-none focus:border-cyan-500"
                     >
                       <option value="todo">To Do</option>
                       <option value="in_progress">In Progress</option>
@@ -339,7 +339,7 @@ export default function TicketDetailPage() {
                     <select
                       value={editData.assignee_id}
                       onChange={(e) => setEditData({ ...editData, assignee_id: e.target.value })}
-                      className="w-full bg-slate-950 border border-slate-800 text-slate-350 rounded-xl px-3 py-1.5 mt-1 focus:outline-none focus:border-indigo-500"
+                      className="w-full bg-slate-950 border border-slate-800 text-slate-350 rounded-xl px-3 py-1.5 mt-1 focus:outline-none focus:border-cyan-500"
                     >
                       <option value="">Unassigned</option>
                       {projectMembers.map((member) => (
@@ -360,7 +360,7 @@ export default function TicketDetailPage() {
                       type="date"
                       value={editData.due_date}
                       onChange={(e) => setEditData({ ...editData, due_date: e.target.value })}
-                      className="w-full bg-slate-950 border border-slate-800 text-slate-350 rounded-xl px-3 py-1.5 mt-1 focus:outline-none focus:border-indigo-500"
+                      className="w-full bg-slate-950 border border-slate-800 text-slate-350 rounded-xl px-3 py-1.5 mt-1 focus:outline-none focus:border-cyan-500"
                     />
                   ) : (
                     <p className="text-slate-200 mt-1 font-semibold">
@@ -382,7 +382,7 @@ export default function TicketDetailPage() {
                 <select
                   value={editData.priority}
                   onChange={(e) => setEditData({ ...editData, priority: e.target.value })}
-                  className="w-full bg-slate-950 border border-slate-800 text-slate-350 rounded-xl px-3 py-1.5 mt-2 focus:outline-none focus:border-indigo-500"
+                  className="w-full bg-slate-950 border border-slate-800 text-slate-350 rounded-xl px-3 py-1.5 mt-2 focus:outline-none focus:border-cyan-500"
                 >
                   <option value="low">Low</option>
                   <option value="medium">Medium</option>
@@ -400,7 +400,7 @@ export default function TicketDetailPage() {
                 <select
                   value={editData.type}
                   onChange={(e) => setEditData({ ...editData, type: e.target.value })}
-                  className="w-full bg-slate-950 border border-slate-800 text-slate-350 rounded-xl px-3 py-1.5 mt-2 focus:outline-none focus:border-indigo-500"
+                  className="w-full bg-slate-950 border border-slate-800 text-slate-350 rounded-xl px-3 py-1.5 mt-2 focus:outline-none focus:border-cyan-500"
                 >
                   <option value="bug">Bug</option>
                   <option value="feature">Feature</option>
