@@ -11,7 +11,9 @@ import useProjects from '../../hooks/useProjects';
 // JSDoc: CreateProjectModal renders form layout to establish workspaces
 export default function CreateProjectModal({ onClose, onSuccess }) {
   const { createNewProject, loading, error } = useProjects();
-  const formId = 'create-project-form';
+  
+// HTML form ID anchor to submit project configuration
+const formId = 'create-project-form';
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -45,7 +47,7 @@ export default function CreateProjectModal({ onClose, onSuccess }) {
         description: formData.description,
       });
 
-      toast.success('Project created successfully! ðŸŽ‰');
+      toast.success('Project created successfully! Ã°Å¸Å½â€°');
       onSuccess();
     } catch (err) {
       toast.error(err.message || 'Failed to create project');
@@ -64,7 +66,7 @@ export default function CreateProjectModal({ onClose, onSuccess }) {
             onClick={onClose}
             className="text-slate-400 hover:text-white text-xl transition"
           >
-            âœ•
+            Ã¢Å“â€¢
           </button>
         </div>
 
