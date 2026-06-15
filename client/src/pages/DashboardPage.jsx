@@ -54,7 +54,9 @@ const handleProjectCreated = () => {
   };
 
   // Compute Stats
-  const totalProjects = projects.length;
+  
+// Calculates overall project parameters for header stats
+const totalProjects = projects.length;
   const totalMembersCount = projects.reduce((acc, p) => acc + (p.member_count || 0), 0);
   const adminProjects = projects.filter(p => p.role === 'admin' || p.role === 'owner').length;
 
@@ -65,7 +67,7 @@ const handleProjectCreated = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex justify-between items-center">
           <div>
             <h1 className="text-2xl font-extrabold tracking-tight bg-gradient-to-r from-cyan-400 via-teal-300 to-emerald-400 bg-clip-text text-transparent">
-              Ã°Å¸Å¡â‚¬ Aethera
+              ÃƒÂ°Ã…Â¸Ã…Â¡Ã¢â€šÂ¬ Aethera
             </h1>
             <p className="text-xs text-slate-400 mt-0.5">Welcome back, {user?.name}</p>
           </div>
@@ -98,21 +100,21 @@ const handleProjectCreated = () => {
         {/* Statistics Cards */}
         <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="bg-slate-900 border border-slate-900/80 rounded-2xl p-6 shadow-xl relative overflow-hidden group hover:border-slate-800 transition">
-            <div className="absolute right-4 top-4 text-3xl opacity-20">Ã°Å¸â€œÂ</div>
+            <div className="absolute right-4 top-4 text-3xl opacity-20">ÃƒÂ°Ã…Â¸Ã¢â‚¬Å“Ã‚Â</div>
             <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Projects</p>
             <h3 className="text-3xl font-extrabold text-white mt-2">{totalProjects}</h3>
             <p className="text-xs text-slate-500 mt-1">Assigned workspace instances</p>
           </div>
 
           <div className="bg-slate-900 border border-slate-900/80 rounded-2xl p-6 shadow-xl relative overflow-hidden group hover:border-slate-800 transition">
-            <div className="absolute right-4 top-4 text-3xl opacity-20">Ã°Å¸â€˜Â¥</div>
+            <div className="absolute right-4 top-4 text-3xl opacity-20">ÃƒÂ°Ã…Â¸Ã¢â‚¬ËœÃ‚Â¥</div>
             <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Active Collaborators</p>
             <h3 className="text-3xl font-extrabold text-white mt-2">{totalMembersCount}</h3>
             <p className="text-xs text-slate-500 mt-1">Team members across boards</p>
           </div>
 
           <div className="bg-slate-900 border border-slate-900/80 rounded-2xl p-6 shadow-xl relative overflow-hidden group hover:border-slate-800 transition">
-            <div className="absolute right-4 top-4 text-3xl opacity-20">Ã°Å¸â€â€˜</div>
+            <div className="absolute right-4 top-4 text-3xl opacity-20">ÃƒÂ°Ã…Â¸Ã¢â‚¬ÂÃ¢â‚¬Ëœ</div>
             <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Owner / Admin roles</p>
             <h3 className="text-3xl font-extrabold text-white mt-2">{adminProjects}</h3>
             <p className="text-xs text-slate-500 mt-1">Projects under your control</p>
@@ -142,7 +144,7 @@ const handleProjectCreated = () => {
           ) : projects.length === 0 ? (
             // Empty State
             <div className="text-center py-16 bg-slate-900/40 rounded-2xl border border-dashed border-slate-800">
-              <div className="text-5xl mb-4">Ã°Å¸â€œÂ</div>
+              <div className="text-5xl mb-4">ÃƒÂ°Ã…Â¸Ã¢â‚¬Å“Ã‚Â</div>
               <h2 className="text-xl font-bold text-white mb-2">No projects found</h2>
               <p className="text-slate-400 text-sm mb-6">Create your first collaborative board to get started</p>
               <button
@@ -194,8 +196,8 @@ const handleProjectCreated = () => {
                   {/* Project Footer Meta */}
                   <div className="px-6 py-4 bg-slate-950/40 rounded-b-2xl border-t border-slate-950 flex items-center justify-between">
                     <div className="flex gap-3 text-xs text-slate-400">
-                      <span>Ã°Å¸â€˜Â¥ {project.member_count}</span>
-                      <span>Ã°Å¸â€œâ€¦ {new Date(project.created_at).toLocaleDateString()}</span>
+                      <span>ÃƒÂ°Ã…Â¸Ã¢â‚¬ËœÃ‚Â¥ {project.member_count}</span>
+                      <span>ÃƒÂ°Ã…Â¸Ã¢â‚¬Å“Ã¢â‚¬Â¦ {new Date(project.created_at).toLocaleDateString()}</span>
                     </div>
 
                     <div className="flex gap-2">
