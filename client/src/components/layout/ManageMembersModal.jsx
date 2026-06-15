@@ -87,7 +87,7 @@ export default function ManageMembersModal({ projectId, onClose, onSuccess }) {
               value={formData.email}
               onChange={handleChange}
               placeholder="colleague@example.com"
-              className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 text-white rounded-xl focus:outline-none focus:border-indigo-500 transition placeholder:text-slate-600"
+              className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 text-white rounded-xl focus:outline-none focus:border-cyan-500 transition placeholder:text-slate-600"
               disabled={loading}
             />
             <p className="text-[10px] text-slate-500 mt-1">User must already have an account</p>
@@ -103,7 +103,7 @@ export default function ManageMembersModal({ projectId, onClose, onSuccess }) {
               name="role"
               value={formData.role}
               onChange={handleChange}
-              className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 text-white rounded-xl focus:outline-none focus:border-indigo-500 transition"
+              className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 text-white rounded-xl focus:outline-none focus:border-cyan-500 transition"
               disabled={loading}
             >
               <option value="viewer" className="bg-slate-900">👁️ Viewer - View only</option>
@@ -127,7 +127,7 @@ export default function ManageMembersModal({ projectId, onClose, onSuccess }) {
             type="submit"
             form={formId}
             disabled={loading}
-            className="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-semibold transition disabled:opacity-50 flex items-center gap-2"
+            className="px-5 py-2 bg-gradient-to-r from-cyan-600 to-teal-650 hover:from-cyan-500 hover:to-teal-555 text-white rounded-xl font-semibold transition disabled:opacity-50 flex items-center gap-2"
           >
             {loading ? 'Adding...' : 'Add Member'}
           </button>
