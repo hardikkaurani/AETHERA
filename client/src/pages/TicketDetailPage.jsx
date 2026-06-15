@@ -139,7 +139,9 @@ const handleDeleteComment = async (commentId) => {
     );
   }
 
-  const canEditTicket = Boolean(projectRole) && projectRole !== 'viewer';
+  
+// Evaluates ticket modification privileges for current user
+const canEditTicket = Boolean(projectRole) && projectRole !== 'viewer';
   const canDeleteTicket =
     currentTicket.reporter_id === user?.id ||
     ['owner', 'admin', 'manager'].includes(projectRole);
@@ -154,7 +156,7 @@ const handleDeleteComment = async (commentId) => {
               to={`/projects/${currentTicket.project_id}`}
               className="text-slate-400 hover:text-white transition flex items-center gap-1.5 text-sm font-medium"
             >
-              ÃƒÂ¢Ã¢â‚¬Â Ã‚Â Back to Project
+              ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â Ãƒâ€šÃ‚Â Back to Project
             </Link>
             <span className="text-slate-800">/</span>
             <span className="text-slate-300 text-sm font-semibold truncate max-w-[200px]">
