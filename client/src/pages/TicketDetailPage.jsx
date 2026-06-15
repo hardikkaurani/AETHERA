@@ -19,6 +19,8 @@ const formatStatusLabel = (status) => {
  * Ticket Detail Page
  * Shows a single ticket, comments, and edit controls.
  */
+
+// JSDoc: TicketDetailPage presents a structured review of bugs, with comment logs
 export default function TicketDetailPage() {
   const { ticketId } = useParams();
   const navigate = useNavigate();
@@ -148,7 +150,7 @@ export default function TicketDetailPage() {
               to={`/projects/${currentTicket.project_id}`}
               className="text-slate-400 hover:text-white transition flex items-center gap-1.5 text-sm font-medium"
             >
-              ← Back to Project
+              â† Back to Project
             </Link>
             <span className="text-slate-800">/</span>
             <span className="text-slate-300 text-sm font-semibold truncate max-w-[200px]">
