@@ -26,7 +26,9 @@ export default function ProfilePage() {
     }));
   };
 
-  const handlePasswordSubmit = async (e) => {
+  
+// Validates password strength and matches before issuing update request
+const handlePasswordSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
@@ -68,7 +70,7 @@ export default function ProfilePage() {
               to="/dashboard"
               className="text-slate-400 hover:text-white transition flex items-center gap-1.5 text-sm font-medium"
             >
-              â† Back to Projects
+              Ã¢â€ Â Back to Projects
             </Link>
             <span className="text-slate-800">/</span>
             <span className="text-slate-300 text-sm font-semibold">User Profile</span>
@@ -86,7 +88,7 @@ export default function ProfilePage() {
       <header className="bg-slate-900/60 border-b border-slate-900 py-12">
         <div className="max-w-4xl mx-auto px-4 flex items-center gap-6">
           <div className="w-16 h-16 rounded-2xl bg-cyan-600/20 border border-cyan-500/30 flex items-center justify-center text-3xl shadow-lg">
-            ðŸ‘¤
+            Ã°Å¸â€˜Â¤
           </div>
           <div>
             <h1 className="text-3xl font-extrabold text-white tracking-tight">
@@ -120,7 +122,7 @@ export default function ProfilePage() {
           <div className="md:col-span-2 space-y-6">
             <div className="bg-slate-900 border border-slate-900/80 rounded-2xl p-6 shadow-xl">
               <h2 className="text-lg font-bold text-white mb-5 flex items-center gap-2">
-                <span>ðŸ”’</span> Update Password
+                <span>Ã°Å¸â€â€™</span> Update Password
               </h2>
 
               <form onSubmit={handlePasswordSubmit} className="space-y-4">
@@ -134,7 +136,7 @@ export default function ProfilePage() {
                     name="currentPassword"
                     value={passwordData.currentPassword}
                     onChange={handlePasswordChange}
-                    placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+                    placeholder="Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢"
                     className="w-full px-4 py-2 bg-slate-950 border border-slate-800 text-white rounded-xl focus:outline-none focus:border-cyan-500 transition"
                     required
                   />
@@ -150,7 +152,7 @@ export default function ProfilePage() {
                     name="newPassword"
                     value={passwordData.newPassword}
                     onChange={handlePasswordChange}
-                    placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+                    placeholder="Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢"
                     className="w-full px-4 py-2 bg-slate-950 border border-slate-800 text-white rounded-xl focus:outline-none focus:border-cyan-500 transition"
                     required
                   />
@@ -166,7 +168,7 @@ export default function ProfilePage() {
                     name="confirmPassword"
                     value={passwordData.confirmPassword}
                     onChange={handlePasswordChange}
-                    placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+                    placeholder="Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢"
                     className="w-full px-4 py-2 bg-slate-950 border border-slate-800 text-white rounded-xl focus:outline-none focus:border-cyan-500 transition"
                     required
                   />
