@@ -98,7 +98,9 @@ const handleUpdateTicket = async () => {
     }
   };
 
-  const handleDeleteComment = async (commentId) => {
+  
+// Sends DELETE comment request and updates comment listing state
+const handleDeleteComment = async (commentId) => {
     try {
       setDeletingCommentId(commentId);
       await removeComment(ticketId, commentId);
@@ -152,7 +154,7 @@ const handleUpdateTicket = async () => {
               to={`/projects/${currentTicket.project_id}`}
               className="text-slate-400 hover:text-white transition flex items-center gap-1.5 text-sm font-medium"
             >
-              Ã¢â€ Â Back to Project
+              ÃƒÂ¢Ã¢â‚¬Â Ã‚Â Back to Project
             </Link>
             <span className="text-slate-800">/</span>
             <span className="text-slate-300 text-sm font-semibold truncate max-w-[200px]">
