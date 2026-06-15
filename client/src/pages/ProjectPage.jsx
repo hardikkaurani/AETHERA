@@ -83,7 +83,9 @@ export default function ProjectPage() {
     loadTickets();
   };
 
-  const handleStatusChange = async (ticketId, newStatus) => {
+  
+// Handles kanban board status changes locally for instant visual response
+const handleStatusChange = async (ticketId, newStatus) => {
     try {
       await changeTicketStatus(ticketId, newStatus);
       await loadTickets();
@@ -188,7 +190,7 @@ export default function ProjectPage() {
               to="/dashboard"
               className="text-slate-400 hover:text-white transition flex items-center gap-1.5 text-sm font-medium"
             >
-              â† Back to Projects
+              Ã¢â€ Â Back to Projects
             </Link>
             <span className="text-slate-800">/</span>
             <span className="text-slate-300 text-sm font-semibold truncate max-w-[200px]">
@@ -277,11 +279,11 @@ export default function ProjectPage() {
           </div>
 
           <div className="flex flex-wrap gap-4 text-xs text-slate-400 mt-6 pt-6 border-t border-slate-900/60">
-            <span className="flex items-center gap-1">ðŸ‘¤ Created by: <strong>{project.owner_name}</strong></span>
-            <span className="text-slate-700">â€¢</span>
-            <span>ðŸ“… {new Date(project.created_at).toLocaleDateString()}</span>
-            <span className="text-slate-700">â€¢</span>
-            <span>ðŸ‘¥ {project.members?.length || 0} Team Members</span>
+            <span className="flex items-center gap-1">Ã°Å¸â€˜Â¤ Created by: <strong>{project.owner_name}</strong></span>
+            <span className="text-slate-700">Ã¢â‚¬Â¢</span>
+            <span>Ã°Å¸â€œâ€¦ {new Date(project.created_at).toLocaleDateString()}</span>
+            <span className="text-slate-700">Ã¢â‚¬Â¢</span>
+            <span>Ã°Å¸â€˜Â¥ {project.members?.length || 0} Team Members</span>
           </div>
         </div>
       </header>
@@ -297,7 +299,7 @@ export default function ProjectPage() {
             <div className="bg-slate-900 border border-slate-900/80 rounded-2xl p-6 shadow-xl">
               <div className="flex items-center justify-between mb-5">
                 <h2 className="text-lg font-bold text-white flex items-center gap-2">
-                  <span>ðŸ‘¥</span> Team Members
+                  <span>Ã°Å¸â€˜Â¥</span> Team Members
                 </h2>
                 {canManageMembers && (
                   <button
@@ -350,7 +352,7 @@ export default function ProjectPage() {
             {/* Project Activity Log Section */}
             <div className="bg-slate-900 border border-slate-900/80 rounded-2xl p-6 shadow-xl">
               <h2 className="text-lg font-bold text-white mb-5 flex items-center gap-2">
-                <span>âš¡</span> Project Activity Log
+                <span>Ã¢Å¡Â¡</span> Project Activity Log
               </h2>
               <ActivityFeed projectId={id} />
             </div>
@@ -375,7 +377,7 @@ export default function ProjectPage() {
                       className="w-full bg-slate-950 border border-slate-800 text-white rounded-xl pl-4 pr-10 py-2 text-sm focus:outline-none focus:border-cyan-500 transition"
                     />
                     <button type="submit" className="absolute right-3 top-2.5 text-slate-500 hover:text-cyan-400">
-                      ðŸ”
+                      Ã°Å¸â€Â
                     </button>
                   </div>
                 </div>
@@ -429,7 +431,7 @@ export default function ProjectPage() {
                           : 'bg-slate-950 text-slate-400 hover:text-white border border-slate-800'
                       }`}
                     >
-                      ðŸ“‹ List Layout
+                      Ã°Å¸â€œâ€¹ List Layout
                     </button>
                     <button
                       onClick={() => setViewMode('kanban')}
@@ -439,7 +441,7 @@ export default function ProjectPage() {
                           : 'bg-slate-950 text-slate-400 hover:text-white border border-slate-800'
                       }`}
                     >
-                      ðŸ“Š Kanban Board
+                      Ã°Å¸â€œÅ  Kanban Board
                     </button>
                   </div>
                 </div>
