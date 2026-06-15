@@ -22,6 +22,8 @@ export const escapeHtml = (text) => {
 /**
  * Sanitize user input - remove dangerous HTML
  */
+
+// Removes HTML elements and scripts to guard against XSS attempts
 export const sanitizeInput = (input) => {
   if (!input) return '';
   return input
