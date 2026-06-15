@@ -94,7 +94,7 @@ export default function CreateTicketModal({ projectId, project, onClose, onSucce
               value={formData.title}
               onChange={handleChange}
               placeholder="e.g., Fix login button alignment"
-              className="w-full px-4 py-2 bg-slate-950 border border-slate-800 text-white rounded-xl focus:outline-none focus:border-indigo-500 transition"
+              className="w-full px-4 py-2 bg-slate-950 border border-slate-800 text-white rounded-xl focus:outline-none focus:border-cyan-500 transition"
               disabled={loading}
               maxLength={255}
             />
@@ -112,7 +112,7 @@ export default function CreateTicketModal({ projectId, project, onClose, onSucce
               onChange={handleChange}
               placeholder="Add more details..."
               rows={3}
-              className="w-full px-4 py-2 bg-slate-950 border border-slate-800 text-white rounded-xl focus:outline-none focus:border-indigo-500 transition resize-none"
+              className="w-full px-4 py-2 bg-slate-950 border border-slate-800 text-white rounded-xl focus:outline-none focus:border-cyan-500 transition resize-none"
               disabled={loading}
             />
           </div>
@@ -127,7 +127,7 @@ export default function CreateTicketModal({ projectId, project, onClose, onSucce
               name="type"
               value={formData.type}
               onChange={handleChange}
-              className="w-full px-4 py-2 bg-slate-950 border border-slate-800 text-white rounded-xl focus:outline-none focus:border-indigo-500 transition"
+              className="w-full px-4 py-2 bg-slate-950 border border-slate-800 text-white rounded-xl focus:outline-none focus:border-cyan-500 transition"
               disabled={loading}
             >
               <option value="bug">🐛 Bug</option>
@@ -147,7 +147,7 @@ export default function CreateTicketModal({ projectId, project, onClose, onSucce
               name="priority"
               value={formData.priority}
               onChange={handleChange}
-              className="w-full px-4 py-2 bg-slate-950 border border-slate-800 text-white rounded-xl focus:outline-none focus:border-indigo-500 transition"
+              className="w-full px-4 py-2 bg-slate-950 border border-slate-800 text-white rounded-xl focus:outline-none focus:border-cyan-500 transition"
               disabled={loading}
             >
               <option value="low">Low</option>
@@ -168,7 +168,7 @@ export default function CreateTicketModal({ projectId, project, onClose, onSucce
                 name="assignee_id"
                 value={formData.assignee_id}
                 onChange={handleChange}
-                className="w-full px-4 py-2 bg-slate-950 border border-slate-800 text-white rounded-xl focus:outline-none focus:border-indigo-500 transition"
+                className="w-full px-4 py-2 bg-slate-950 border border-slate-800 text-white rounded-xl focus:outline-none focus:border-cyan-500 transition"
                 disabled={loading}
               >
                 <option value="">Unassigned</option>
@@ -192,7 +192,7 @@ export default function CreateTicketModal({ projectId, project, onClose, onSucce
               name="due_date"
               value={formData.due_date}
               onChange={handleChange}
-              className="w-full px-4 py-2 bg-slate-950 border border-slate-800 text-white rounded-xl focus:outline-none focus:border-indigo-500 transition"
+              className="w-full px-4 py-2 bg-slate-950 border border-slate-800 text-white rounded-xl focus:outline-none focus:border-cyan-500 transition"
               disabled={loading}
             />
           </div>
@@ -211,7 +211,7 @@ export default function CreateTicketModal({ projectId, project, onClose, onSucce
             type="submit"
             form={formId}
             disabled={loading}
-            className="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-semibold transition disabled:opacity-50 flex items-center gap-2"
+            className="px-5 py-2 bg-gradient-to-r from-cyan-600 to-teal-650 hover:from-cyan-500 hover:to-teal-555 text-white rounded-xl font-semibold transition disabled:opacity-50 flex items-center gap-2"
           >
             {loading ? 'Creating...' : 'Create Ticket'}
           </button>
