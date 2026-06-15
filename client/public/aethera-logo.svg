@@ -1,0 +1,7 @@
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Stylized A -->
+  <path d="M128 32L64 192H104L116 160H164L136 128H128L128 64Z" fill="white"/>
+  <path d="M148 100L184 192H144L132 160H120Z" fill="white"/>
+  <!-- Sparkle Star -->
+  <path d="M200 64C200 80 216 80 216 80C216 80 200 80 200 96C200 80 184 80 184 80C184 80 200 80 200 64Z" fill="white"/>
+</svg>

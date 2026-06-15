@@ -9,16 +9,16 @@ export default function LandingPage() {
       <nav className="fixed top-0 left-0 w-full z-50 border-b border-white/5 bg-[#030712]/70 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
           {/* Logo */}
-          <Link to="/" className="text-white text-lg font-bold tracking-[0.25em] hover:text-cyan-400 transition-colors uppercase font-mono">
-            Aethera
+          <Link to="/" className="flex items-center gap-3 group">
+            <img src="/aethera-logo.svg" alt="Aethera Logo" className="w-8 h-8 group-hover:drop-shadow-[0_0_8px_rgba(6,182,212,0.8)] transition-all" />
+            <span className="text-white text-lg font-bold tracking-[0.25em] group-hover:text-cyan-400 transition-colors uppercase font-mono mt-1">Aethera</span>
           </Link>
           
           {/* Menu Links */}
           <div className="hidden md:flex gap-8 text-xs font-semibold tracking-widest text-slate-400 uppercase">
-            <a href="#telemetry" className="hover:text-white transition-colors">Telemetry</a>
-            <a href="#missions" className="hover:text-white transition-colors">Missions</a>
-            <a href="#lifecycle" className="hover:text-white transition-colors">Lifecycle</a>
-            <a href="#logs" className="hover:text-white transition-colors">Logs</a>
+            <a href="#features" className="hover:text-white transition-colors">Features</a>
+            <a href="#workflow" className="hover:text-white transition-colors">Workflow</a>
+            <a href="#activity" className="hover:text-white transition-colors">Activity Logs</a>
           </div>
           
           {/* CTA capsule button */}
@@ -26,14 +26,14 @@ export default function LandingPage() {
             to="/login" 
             className="border border-white/20 hover:border-cyan-400 hover:text-cyan-400 px-6 py-2.5 rounded-full text-xs font-bold tracking-widest text-white uppercase transition-all duration-300 bg-white/5 hover:bg-cyan-950/20"
           >
-            Launch Console
+            Launch App
           </Link>
         </div>
       </nav>
 
       {/* 2. HERO SECTION */}
       <section className="relative min-h-screen flex flex-col justify-between pt-32 pb-12 px-6 z-10 overflow-hidden bg-radial-gradient">
-        {/* Interactive 3D telemetry particles background */}
+        {/* Interactive 3D data particles background */}
         <ThreeLandingBg interactive={false} />
 
         {/* Dynamic ambient gradient glow */}
@@ -41,20 +41,20 @@ export default function LandingPage() {
 
         {/* Top metadata line */}
         <div className="max-w-7xl mx-auto w-full flex justify-between text-cyan-500/40 font-mono text-[10px] tracking-[0.3em] uppercase mt-4 z-10">
-          <span>[ tele_system: aet_operational ]</span>
-          <span>[ orbit: geo_stationary ]</span>
+          <span>[ system: aet_active ]</span>
+          <span>[ env: production ]</span>
         </div>
 
         {/* Hero Title */}
         <div className="max-w-7xl mx-auto w-full flex-grow flex flex-col justify-center items-start z-10 my-12">
           <h1 className="text-5xl md:text-8xl lg:text-9xl font-black text-white tracking-tight uppercase leading-[0.85] text-left max-w-5xl select-none">
             Building <br />
-            next-generation <br />
-            software tracking <br />
+            high-fidelity <br />
+            developer tracking <br />
             systems
           </h1>
           <p className="text-slate-400 text-sm md:text-lg tracking-wide max-w-xl text-left mt-8 font-medium leading-relaxed">
-            High-precision issue telemetry, real-time diagnostic allocation, and unified mission control built for space-grade developer teams.
+            A premium issue tracking workspace built for modern engineering teams. Monitor bugs, track sprints, and streamline your entire software development lifecycle.
           </p>
           <div className="flex gap-4 mt-10">
             <Link 
@@ -64,10 +64,10 @@ export default function LandingPage() {
               Enter Workspace
             </Link>
             <a 
-              href="#telemetry" 
+              href="#features" 
               className="border border-white/20 hover:border-white px-8 py-4 rounded-full text-xs font-bold tracking-widest text-white uppercase transition-all duration-300"
             >
-              View Telemetry
+              View Features
             </a>
           </div>
         </div>
@@ -76,16 +76,16 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto w-full flex flex-wrap justify-between items-end gap-6 border-t border-white/5 pt-8 z-10">
           <div className="flex gap-12">
             <div>
-              <p className="text-[10px] tracking-[0.2em] uppercase text-slate-500 font-bold mb-1">LATENCY</p>
-              <p className="text-xl font-bold font-mono text-cyan-400">&lt; 8.4ms</p>
+              <p className="text-[10px] tracking-[0.2em] uppercase text-slate-500 font-bold mb-1">API LATENCY</p>
+              <p className="text-xl font-bold font-mono text-cyan-400">&lt; 10ms</p>
             </div>
             <div>
-              <p className="text-[10px] tracking-[0.2em] uppercase text-slate-500 font-bold mb-1">STATUS</p>
-              <p className="text-xl font-bold font-mono text-emerald-400">ACTIVE</p>
+              <p className="text-[10px] tracking-[0.2em] uppercase text-slate-500 font-bold mb-1">SYSTEM STATUS</p>
+              <p className="text-xl font-bold font-mono text-emerald-400">OPERATIONAL</p>
             </div>
             <div>
               <p className="text-[10px] tracking-[0.2em] uppercase text-slate-500 font-bold mb-1">VERSION</p>
-              <p className="text-xl font-bold font-mono text-slate-400">AET-v2.0</p>
+              <p className="text-xl font-bold font-mono text-slate-400">v2.0.1</p>
             </div>
           </div>
           <div className="text-slate-500 text-[10px] tracking-widest uppercase font-mono">
@@ -94,8 +94,8 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* 3. BEIGE/OFF-WHITE SECTION SPECIFICATION (Vast-Space Style) */}
-      <section id="telemetry" className="bg-[#f3f0e9] text-[#141414] py-24 px-6 border-t border-[#e3dfd6] relative z-20">
+      {/* 3. BEIGE/OFF-WHITE SECTION SPECIFICATION */}
+      <section id="features" className="bg-[#f3f0e9] text-[#141414] py-24 px-6 border-t border-[#e3dfd6] relative z-20">
         <div className="max-w-7xl mx-auto">
           
           {/* Header row with corners */}
@@ -106,15 +106,15 @@ export default function LandingPage() {
 
             <div className="max-w-xl">
               <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tight leading-[0.95] mb-6 font-sans">
-                Aethera-1: Space-grade tracking telemetry
+                Aethera: Precision bug tracking infrastructure
               </h2>
             </div>
             <div className="max-w-md md:mt-4">
               <p className="text-[#555] text-sm md:text-base leading-relaxed font-medium">
-                In engineering, latency and error tracking are mission-critical metrics. Aethera-1 is constructed as a high-fidelity workspace providing instantaneous issue assignment, visual kanban tracking, and real-time team synchronization.
+                In software engineering, accurate issue tracking is mission-critical. Aethera is designed as a high-performance environment offering real-time task allocation, visual Kanban workflows, and comprehensive project analytics.
               </p>
               <Link to="/login" className="inline-flex items-center gap-2 mt-6 text-xs font-bold tracking-widest uppercase hover:underline">
-                <span>Configure telemetry</span>
+                <span>Access Dashboard</span>
                 <span className="font-mono">→</span>
               </Link>
             </div>
@@ -126,22 +126,22 @@ export default function LandingPage() {
             {/* Specs list left */}
             <div className="flex flex-col gap-8 text-left">
               <div>
-                <p className="text-[10px] tracking-[0.25em] uppercase text-[#a59f8f] font-extrabold mb-1">SPECIFICATION 01</p>
-                <h3 className="text-xl font-bold uppercase mb-2">POSTGRES ENGINE</h3>
-                <p className="text-[#666] text-xs leading-relaxed font-medium">Relational schema models ensuring transactional safety, zero-data-loss allocations, and low-latency queries.</p>
+                <p className="text-[10px] tracking-[0.25em] uppercase text-[#a59f8f] font-extrabold mb-1">FEATURE 01</p>
+                <h3 className="text-xl font-bold uppercase mb-2">AGILE KANBAN BOARD</h3>
+                <p className="text-[#666] text-xs leading-relaxed font-medium">Full-featured visual interface offering drag-and-drop state updates, sprint categorization, and issue prioritization.</p>
               </div>
               <div>
-                <p className="text-[10px] tracking-[0.25em] uppercase text-[#a59f8f] font-extrabold mb-1">SPECIFICATION 02</p>
-                <h3 className="text-xl font-bold uppercase mb-2">TELEMETRY BOARD</h3>
-                <p className="text-[#666] text-xs leading-relaxed font-medium">Full-featured kanban interface offering visual drag-and-drop state updates and dynamic project categorization.</p>
+                <p className="text-[10px] tracking-[0.25em] uppercase text-[#a59f8f] font-extrabold mb-1">FEATURE 02</p>
+                <h3 className="text-xl font-bold uppercase mb-2">POSTGRES DATABASE</h3>
+                <p className="text-[#666] text-xs leading-relaxed font-medium">Robust relational schema ensuring transactional data safety, precise user allocations, and instant query resolution.</p>
               </div>
             </div>
 
-            {/* Rotating 3D Satellite Core in Center */}
+            {/* Rotating 3D Data Node in Center */}
             <div className="h-[350px] relative w-full border border-[#e3dfd6] rounded-3xl bg-[#ece9e0]/40 overflow-hidden flex items-center justify-center">
               {/* Background watermark text */}
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
-                <span className="text-[8rem] font-black tracking-widest text-[#e3dfd6]/50 uppercase font-sans">AET-1</span>
+                <span className="text-[8rem] font-black tracking-widest text-[#e3dfd6]/50 uppercase font-sans">AET</span>
               </div>
               <ThreeLandingBg interactive={true} />
             </div>
@@ -150,42 +150,42 @@ export default function LandingPage() {
             <div className="flex flex-col gap-8 text-left lg:pl-6">
               <div className="border border-[#e3dfd6] p-6 rounded-2xl bg-[#ece9e0]/30 font-mono text-xs text-[#333] flex flex-col gap-3">
                 <div className="flex justify-between border-b border-[#e3dfd6]/70 pb-2">
-                  <span>CREW SIZE:</span>
-                  <span className="font-bold text-[#141414]">INFINITE</span>
+                  <span>TEAM CAPACITY:</span>
+                  <span className="font-bold text-[#141414]">UNLIMITED</span>
                 </div>
                 <div className="flex justify-between border-b border-[#e3dfd6]/70 pb-2">
-                  <span>HABITABLE CHANNELS:</span>
-                  <span className="font-bold text-[#141414]">16 ACTIVE</span>
+                  <span>ACTIVE WORKSPACES:</span>
+                  <span className="font-bold text-[#141414]">MULTI-PROJECT</span>
                 </div>
                 <div className="flex justify-between border-b border-[#e3dfd6]/70 pb-2">
-                  <span>LATENCY ENGINE:</span>
-                  <span className="font-bold text-[#141414]">NODE.JS / VITE</span>
+                  <span>BACKEND ENGINE:</span>
+                  <span className="font-bold text-[#141414]">EXPRESS.JS</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>ORBITAL RANGE:</span>
-                  <span className="font-bold text-[#141414]">425 KM</span>
+                  <span>FRONTEND UI:</span>
+                  <span className="font-bold text-[#141414]">REACT / VITE</span>
                 </div>
               </div>
               <div>
-                <p className="text-[10px] tracking-[0.25em] uppercase text-[#a59f8f] font-extrabold mb-1">SPECIFICATION 03</p>
-                <h3 className="text-xl font-bold uppercase mb-2">JWT CRYPTO ACCESS</h3>
-                <p className="text-[#666] text-xs leading-relaxed font-medium">Cryptographically signed access tokens and secure HTTP authorization headers protecting mission telemetry.</p>
+                <p className="text-[10px] tracking-[0.25em] uppercase text-[#a59f8f] font-extrabold mb-1">FEATURE 03</p>
+                <h3 className="text-xl font-bold uppercase mb-2">SECURE AUTHENTICATION</h3>
+                <p className="text-[#666] text-xs leading-relaxed font-medium">Enterprise-grade JWT token access and encrypted password hashing protecting your proprietary codebase data.</p>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 5. RULER / LIFECYCLE LIFELINE PROGRESS BAR */}
-      <section id="lifecycle" className="bg-[#030712] text-slate-100 py-28 px-6 border-t border-white/5 relative z-20 overflow-hidden">
+      {/* 5. RULER / LIFECYCLE PROGRESS BAR */}
+      <section id="workflow" className="bg-[#030712] text-slate-100 py-28 px-6 border-t border-white/5 relative z-20 overflow-hidden">
         {/* Subtle grid line backdrop */}
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#080c18_1px,transparent_1px),linear-gradient(to_bottom,#080c18_1px,transparent_1px)] bg-[size:4rem_4rem] opacity-30 pointer-events-none"></div>
 
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="mb-16 text-left">
-            <p className="text-cyan-500 font-mono text-xs tracking-[0.25em] uppercase mb-2">// TRACKING PIPELINE</p>
+            <p className="text-cyan-500 font-mono text-xs tracking-[0.25em] uppercase mb-2">// TRACKING WORKFLOW</p>
             <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tight text-white font-sans">
-              SOFTWARE LIFECYCLE CHRONOLOGY
+              SOFTWARE ISSUE LIFECYCLE
             </h2>
           </div>
 
@@ -195,83 +195,83 @@ export default function LandingPage() {
             {/* Ticks and stages */}
             <div className="flex-1 text-left relative pt-4">
               <span className="absolute -top-[5px] left-0 w-2 h-2 bg-cyan-500 rounded-full"></span>
-              <p className="font-mono text-xs text-cyan-400 font-bold tracking-widest mb-3">01 / INGESTION</p>
-              <h3 className="text-lg font-bold text-white uppercase mb-2">Telemetry Registration</h3>
-              <p className="text-slate-400 text-xs leading-relaxed">Errors and telemetry reports are instantly ingested and logged under active projects.</p>
+              <p className="font-mono text-xs text-cyan-400 font-bold tracking-widest mb-3">01 / REPORTING</p>
+              <h3 className="text-lg font-bold text-white uppercase mb-2">Issue Registration</h3>
+              <p className="text-slate-400 text-xs leading-relaxed">Bugs and feature requests are documented and categorized under specific development projects.</p>
             </div>
 
             <div className="flex-1 text-left relative pt-4">
               <span className="absolute -top-[5px] left-0 w-2 h-2 bg-slate-800 rounded-full"></span>
-              <p className="font-mono text-xs text-slate-500 font-bold tracking-widest mb-3">02 / DIAGNOSTICS</p>
-              <h3 className="text-lg font-bold text-white uppercase mb-2">Priority Calculation</h3>
-              <p className="text-slate-400 text-xs leading-relaxed">Issues are automatically indexed based on severity, project association, and critical path metrics.</p>
+              <p className="font-mono text-xs text-slate-500 font-bold tracking-widest mb-3">02 / TRIAGE</p>
+              <h3 className="text-lg font-bold text-white uppercase mb-2">Priority Assessment</h3>
+              <p className="text-slate-400 text-xs leading-relaxed">Tickets are evaluated based on severity and status, ensuring critical fixes are addressed first.</p>
             </div>
 
             <div className="flex-1 text-left relative pt-4">
               <span className="absolute -top-[5px] left-0 w-2 h-2 bg-slate-800 rounded-full"></span>
               <p className="font-mono text-xs text-slate-500 font-bold tracking-widest mb-3">03 / ALLOCATION</p>
-              <h3 className="text-lg font-bold text-white uppercase mb-2">Mission Assignment</h3>
-              <p className="text-slate-400 text-xs leading-relaxed">Engineers allocate tasks to specific developer cards on the responsive Kanban board workspace.</p>
+              <h3 className="text-lg font-bold text-white uppercase mb-2">Developer Assignment</h3>
+              <p className="text-slate-400 text-xs leading-relaxed">Engineers claim tasks, updating progress visually across the interactive Kanban columns.</p>
             </div>
 
             <div className="flex-1 text-left relative pt-4">
               <span className="absolute -top-[5px] left-0 w-2 h-2 bg-slate-800 rounded-full"></span>
               <p className="font-mono text-xs text-slate-500 font-bold tracking-widest mb-3">04 / RESOLUTION</p>
-              <h3 className="text-lg font-bold text-white uppercase mb-2">Telemetry Purge</h3>
-              <p className="text-slate-400 text-xs leading-relaxed">Completed logs are validated, resolved, and documented permanently inside the activity stream.</p>
+              <h3 className="text-lg font-bold text-white uppercase mb-2">Code Deployment</h3>
+              <p className="text-slate-400 text-xs leading-relaxed">Patches are merged, tickets are marked resolved, and the audit log records the completion.</p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 6. LOGS AND MISSION UPDATES SECTION (Beige Background) */}
-      <section id="logs" className="bg-[#f3f0e9] text-[#141414] py-24 px-6 border-t border-[#e3dfd6] relative z-20">
+      {/* 6. LOGS AND MISSION UPDATES SECTION */}
+      <section id="activity" className="bg-[#f3f0e9] text-[#141414] py-24 px-6 border-t border-[#e3dfd6] relative z-20">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end border-b border-[#e3dfd6] pb-8 mb-12">
             <div>
-              <p className="text-[10px] tracking-[0.25em] uppercase text-[#a59f8f] font-extrabold mb-1">MISSION METRICS</p>
-              <h2 className="text-3xl md:text-5xl font-black uppercase text-[#141414]">UPDATES & TELEMETRY LOGS</h2>
+              <p className="text-[10px] tracking-[0.25em] uppercase text-[#a59f8f] font-extrabold mb-1">WORKSPACE METRICS</p>
+              <h2 className="text-3xl md:text-5xl font-black uppercase text-[#141414]">PROJECT ACTIVITY LOGS</h2>
             </div>
             <Link to="/login" className="text-xs font-bold tracking-widest uppercase hover:underline mt-4 md:mt-0">
-              View all mission logs →
+              Open Dashboard →
             </Link>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="border border-[#e3dfd6] p-8 rounded-2xl bg-[#ece9e0]/30 hover:border-[#b4af9f] transition-all flex flex-col justify-between h-[220px]">
-              <span className="font-mono text-xs text-[#b4af9f]">LOG // AET-004</span>
+              <span className="font-mono text-xs text-[#b4af9f]">AUDIT // PRJ-004</span>
               <div>
-                <h3 className="font-bold text-lg uppercase mb-2">Aethera-1 orbit verified</h3>
-                <p className="text-[#666] text-xs leading-relaxed font-medium">Production workspace verified and active. Database tables synced successfully.</p>
+                <h3 className="font-bold text-lg uppercase mb-2">New sprint initialized</h3>
+                <p className="text-[#666] text-xs leading-relaxed font-medium">Project scope defined. All pending backlog items have been transitioned to the active board.</p>
               </div>
             </div>
             <div className="border border-[#e3dfd6] p-8 rounded-2xl bg-[#ece9e0]/30 hover:border-[#b4af9f] transition-all flex flex-col justify-between h-[220px]">
-              <span className="font-mono text-xs text-[#b4af9f]">LOG // AET-003</span>
+              <span className="font-mono text-xs text-[#b4af9f]">AUDIT // PRJ-003</span>
               <div>
-                <h3 className="font-bold text-lg uppercase mb-2">Telemetry streams connected</h3>
-                <p className="text-[#666] text-xs leading-relaxed font-medium">Real-time socket streams integrated to capture dashboard metrics instantaneously.</p>
+                <h3 className="font-bold text-lg uppercase mb-2">Critical bug resolved</h3>
+                <p className="text-[#666] text-xs leading-relaxed font-medium">Memory leak in the data parser was identified, patched, and verified by the QA team.</p>
               </div>
             </div>
             <div className="border border-[#e3dfd6] p-8 rounded-2xl bg-[#ece9e0]/30 hover:border-[#b4af9f] transition-all flex flex-col justify-between h-[220px]">
-              <span className="font-mono text-xs text-[#b4af9f]">LOG // AET-002</span>
+              <span className="font-mono text-xs text-[#b4af9f]">AUDIT // PRJ-002</span>
               <div>
-                <h3 className="font-bold text-lg uppercase mb-2">VCS sync operational</h3>
-                <p className="text-[#666] text-xs leading-relaxed font-medium">Git commit logs synchronized to trace bugs back to code check-ins.</p>
+                <h3 className="font-bold text-lg uppercase mb-2">Team capacity expanded</h3>
+                <p className="text-[#666] text-xs leading-relaxed font-medium">Three new engineering roles have been granted access to the internal workspace.</p>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 7. JOIN MISSION CONTROL NEWSLETTER (Beige Background) */}
+      {/* 7. MAILING LIST / NEWSLETTER */}
       <section className="bg-[#ece9e0] text-[#141414] py-28 px-6 border-t border-[#e3dfd6] relative z-20">
         <div className="max-w-xl mx-auto text-center">
-          <p className="text-[10px] tracking-[0.3em] uppercase text-[#a59f8f] font-extrabold mb-4">// ENTER TELEMETRY SUBSCRIBER SYSTEM</p>
+          <p className="text-[10px] tracking-[0.3em] uppercase text-[#a59f8f] font-extrabold mb-4">// DEVELOPER MAILING LIST</p>
           <h2 className="text-4xl md:text-5xl font-black uppercase text-[#141414] tracking-tight leading-[0.95] mb-6">
-            Join Mission Control
+            Get System Updates
           </h2>
           <p className="text-[#555] text-sm mb-8 leading-relaxed font-medium">
-            Register to receive telemetry specs, critical patch details, and space-grade engineering releases.
+            Register to receive release notes, architecture improvements, and bug tracker updates.
           </p>
           <form onSubmit={(e) => e.preventDefault()} className="flex flex-col sm:flex-row gap-3">
             <input 
@@ -289,31 +289,34 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* 8. SPLIT-COLUMN SITE MAP FOOTER (Dark Background) */}
+      {/* 8. SPLIT-COLUMN SITE MAP FOOTER */}
       <footer className="bg-[#030712] text-slate-400 py-16 px-6 border-t border-white/5 relative z-20">
         <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8">
           <div>
             <h4 className="text-white text-xs font-bold tracking-widest uppercase mb-4">Workspace</h4>
             <ul className="flex flex-col gap-2.5 text-xs">
-              <li><Link to="/login" className="hover:text-white transition-colors">Telemetry login</Link></li>
+              <li><Link to="/login" className="hover:text-white transition-colors">Developer login</Link></li>
               <li><Link to="/register" className="hover:text-white transition-colors">Create account</Link></li>
             </ul>
           </div>
           <div>
-            <h4 className="text-white text-xs font-bold tracking-widest uppercase mb-4">Missions</h4>
+            <h4 className="text-white text-xs font-bold tracking-widest uppercase mb-4">Features</h4>
             <ul className="flex flex-col gap-2.5 text-xs">
-              <li><a href="#telemetry" className="hover:text-white transition-colors">Specs</a></li>
-              <li><a href="#lifecycle" className="hover:text-white transition-colors">Lifecycle</a></li>
+              <li><a href="#features" className="hover:text-white transition-colors">Specifications</a></li>
+              <li><a href="#workflow" className="hover:text-white transition-colors">Lifecycle</a></li>
             </ul>
           </div>
           <div>
-            <h4 className="text-white text-xs font-bold tracking-widest uppercase mb-4">Telemetry</h4>
+            <h4 className="text-white text-xs font-bold tracking-widest uppercase mb-4">Logs</h4>
             <ul className="flex flex-col gap-2.5 text-xs">
-              <li><a href="#logs" className="hover:text-white transition-colors">Audit logs</a></li>
+              <li><a href="#activity" className="hover:text-white transition-colors">Audit trail</a></li>
             </ul>
           </div>
           <div>
-            <h4 className="text-white text-xs font-bold tracking-widest uppercase mb-4 font-mono tracking-[0.2em]">AETHERA</h4>
+            <h4 className="text-white text-xs font-bold tracking-widest uppercase mb-4 flex items-center gap-2 font-mono tracking-[0.2em]">
+              <img src="/aethera-logo.svg" alt="" className="w-4 h-4" />
+              AETHERA
+            </h4>
             <p className="text-[10px] text-slate-500 uppercase leading-relaxed font-mono mt-1">
               Building next-gen tracking systems.
             </p>
@@ -323,7 +326,7 @@ export default function LandingPage() {
         {/* Bottom copyright */}
         <div className="max-w-7xl mx-auto border-t border-white/5 mt-16 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-[10px] tracking-widest uppercase text-slate-600 font-mono">
-            &copy; 2026 Aethera Proprietary Systems. All rights reserved.
+            &copy; 2026 Aethera Bug Tracker. All rights reserved.
           </p>
           <p className="text-[10px] tracking-widest uppercase text-slate-600 font-mono">
             Built by <a href="https://github.com/hardikkaurani" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:text-cyan-300 hover:underline transition">HKaurani_01</a>
