@@ -9,7 +9,9 @@ import ThreeCanvasBg from '../components/layout/ThreeCanvasBg';
 // JSDoc: RegisterPage manages user registration flow and sanitizes password inputs
 export default function RegisterPage() {
   const navigate = useNavigate();
-  const { register } = useAuth();
+  
+// Destructures register handler from authentication context
+const { register } = useAuth();
 
   const [formData, setFormData] = useState({
     name: '',
@@ -59,7 +61,7 @@ const handleSubmit = async (e) => {
       }
 
       await register(formData.name, formData.email, formData.password);
-      toast.success('Registration successful! Please sign in. Ã°Å¸Å½â€°');
+      toast.success('Registration successful! Please sign in. ÃƒÂ°Ã…Â¸Ã…Â½Ã¢â‚¬Â°');
       navigate('/login');
     } catch (err) {
       const message = err.message || 'Registration failed. Please try again.';
@@ -85,7 +87,7 @@ const handleSubmit = async (e) => {
           {/* Header */}
           <div className="mb-8 text-center">
             <h1 className="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-cyan-400 via-teal-300 to-emerald-400 bg-clip-text text-transparent mb-2">
-              Ã°Å¸Å¡â‚¬ Aethera
+              ÃƒÂ°Ã…Â¸Ã…Â¡Ã¢â€šÂ¬ Aethera
             </h1>
             <p className="text-slate-400 text-sm font-medium">Create your developer workspace</p>
           </div>
@@ -144,7 +146,7 @@ const handleSubmit = async (e) => {
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                placeholder="Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢"
+                placeholder="ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢"
                 className="w-full px-4 py-2.5 bg-slate-900/50 border border-slate-800 text-white rounded-2xl focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/30 transition-all placeholder:text-slate-600 font-medium text-sm"
                 disabled={loading}
               />
@@ -161,7 +163,7 @@ const handleSubmit = async (e) => {
                 name="confirmPassword"
                 value={formData.confirmPassword}
                 onChange={handleChange}
-                placeholder="Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢"
+                placeholder="ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢"
                 className="w-full px-4 py-2.5 bg-slate-900/50 border border-slate-800 text-white rounded-2xl focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/30 transition-all placeholder:text-slate-600 font-medium text-sm"
                 disabled={loading}
               />
