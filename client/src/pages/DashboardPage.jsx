@@ -60,7 +60,7 @@ export default function DashboardPage() {
       <header className="border-b border-slate-900 bg-slate-900/40 backdrop-blur-md sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex justify-between items-center">
           <div>
-            <h1 className="text-2xl font-extrabold tracking-tight bg-gradient-to-r from-indigo-400 via-purple-300 to-pink-400 bg-clip-text text-transparent">
+            <h1 className="text-2xl font-extrabold tracking-tight bg-gradient-to-r from-cyan-400 via-teal-300 to-emerald-400 bg-clip-text text-transparent">
               🚀 Aethera
             </h1>
             <p className="text-xs text-slate-400 mt-0.5">Welcome back, {user?.name}</p>
@@ -74,7 +74,7 @@ export default function DashboardPage() {
             </Link>
             <button
               onClick={() => setShowCreateModal(true)}
-              className="bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-bold px-4 py-2 rounded-xl transition shadow-lg shadow-indigo-950/20"
+              className="bg-gradient-to-r from-cyan-600 to-teal-650 hover:from-cyan-500 hover:to-teal-550 text-white text-sm font-bold px-4 py-2 rounded-xl transition shadow-lg shadow-cyan-950/20"
             >
               + New Project
             </button>
@@ -131,7 +131,7 @@ export default function DashboardPage() {
           {loading && projects.length === 0 ? (
             <div className="flex items-center justify-center min-h-64">
               <div className="space-y-4 text-center">
-                <div className="w-10 h-10 border-4 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin mx-auto"></div>
+                <div className="w-10 h-10 border-4 border-cyan-500/20 border-t-cyan-500 rounded-full animate-spin mx-auto"></div>
                 <p className="text-slate-400 text-sm">Querying active projects...</p>
               </div>
             </div>
@@ -143,7 +143,7 @@ export default function DashboardPage() {
               <p className="text-slate-400 text-sm mb-6">Create your first collaborative board to get started</p>
               <button
                 onClick={() => setShowCreateModal(true)}
-                className="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-6 py-2.5 rounded-xl transition"
+                className="bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-500 hover:to-teal-500 text-white font-bold px-6 py-2.5 rounded-xl transition"
               >
                 Create Workspace
               </button>
@@ -159,7 +159,7 @@ export default function DashboardPage() {
                   <div className="p-6 space-y-4">
                     {/* Project Title */}
                     <div>
-                      <h3 className="text-lg font-bold text-white truncate hover:text-indigo-400 transition">
+                      <h3 className="text-lg font-bold text-white truncate hover:text-cyan-400 transition">
                         <Link to={`/projects/${project.id}`}>{project.title}</Link>
                       </h3>
                       {project.description && (
@@ -197,7 +197,7 @@ export default function DashboardPage() {
                     <div className="flex gap-2">
                       <Link
                         to={`/projects/${project.id}`}
-                        className="bg-indigo-600/20 text-indigo-400 hover:bg-indigo-600 hover:text-white border border-indigo-500/20 font-semibold px-3 py-1 rounded-xl text-xs transition"
+                        className="bg-cyan-600/20 text-cyan-400 hover:bg-cyan-500 hover:text-white border border-cyan-500/20 font-semibold px-3 py-1 rounded-xl text-xs transition"
                       >
                         Open
                       </Link>
