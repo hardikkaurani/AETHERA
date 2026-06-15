@@ -29,7 +29,9 @@ export default function LoginPage() {
     }
   };
 
-  const handleSubmit = async (e) => {
+  
+// Dispatches signin actions and invokes react toast notifications
+const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
@@ -45,7 +47,7 @@ export default function LoginPage() {
       }
 
       await login(formData.email, formData.password);
-      toast.success('Logged in successfully! ðŸŽ‰');
+      toast.success('Logged in successfully! Ã°Å¸Å½â€°');
       navigate('/dashboard');
     } catch (err) {
       const message = err.message || 'Login failed. Please try again.';
@@ -71,7 +73,7 @@ export default function LoginPage() {
           {/* Header */}
           <div className="mb-8 text-center">
             <h1 className="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-cyan-400 via-teal-300 to-emerald-400 bg-clip-text text-transparent mb-2">
-              ðŸš€ Aethera
+              Ã°Å¸Å¡â‚¬ Aethera
             </h1>
             <p className="text-slate-400 text-sm font-medium">Sign in to your dashboard</p>
           </div>
@@ -113,7 +115,7 @@ export default function LoginPage() {
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+                placeholder="Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢"
                 className="w-full px-4 py-3 bg-slate-900/50 border border-slate-800 text-white rounded-2xl focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/30 transition-all placeholder:text-slate-600 font-medium"
                 disabled={loading}
               />
