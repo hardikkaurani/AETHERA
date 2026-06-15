@@ -86,11 +86,8 @@ const handleSubmit = async (e) => {
         <div className="bg-slate-950/45 backdrop-blur-2xl border border-slate-800/60 rounded-3xl shadow-2xl p-8 hover:border-cyan-500/35 transition-all duration-500">
           {/* Header */}
           <div className="mb-8 text-center">
-            <h1 className="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-cyan-400 via-teal-300 to-emerald-400 bg-clip-text text-transparent mb-2 flex items-center justify-center gap-3">
-              <svg className="w-9 h-9 text-cyan-400 animate-pulse" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15.59 14.37a6 6 0 01-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 006.16-12.12A14.98 14.98 0 009.63 8.4m5.96 5.97V16.5m-5.96-8.1a14.98 14.98 0 00-6.16 12.12A14.98 14.98 0 0014.37 9.63m-5.96-1.23V6.5" />
-              </svg>
-              <span>Aethera</span>
+            <h1 className="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-cyan-400 via-teal-300 to-emerald-400 bg-clip-text text-transparent mb-2">
+              Aethera
             </h1>
             <p className="text-slate-400 text-sm font-medium">Create your developer workspace</p>
           </div>
@@ -149,7 +146,7 @@ const handleSubmit = async (e) => {
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                placeholder="ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢"
+                placeholder="********"
                 className="w-full px-4 py-2.5 bg-slate-900/50 border border-slate-800 text-white rounded-2xl focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/30 transition-all placeholder:text-slate-600 font-medium text-sm"
                 disabled={loading}
               />
@@ -166,7 +163,7 @@ const handleSubmit = async (e) => {
                 name="confirmPassword"
                 value={formData.confirmPassword}
                 onChange={handleChange}
-                placeholder="ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢"
+                placeholder="********"
                 className="w-full px-4 py-2.5 bg-slate-900/50 border border-slate-800 text-white rounded-2xl focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/30 transition-all placeholder:text-slate-600 font-medium text-sm"
                 disabled={loading}
               />
