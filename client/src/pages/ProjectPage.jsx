@@ -153,7 +153,7 @@ export default function ProjectPage() {
     return (
       <div className="flex items-center justify-center min-h-screen bg-slate-950">
         <div className="space-y-4 text-center">
-          <div className="w-12 h-12 border-4 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin mx-auto"></div>
+          <div className="w-12 h-12 border-4 border-cyan-500/20 border-t-cyan-500 rounded-full animate-spin mx-auto"></div>
           <p className="text-slate-400">Loading project details...</p>
         </div>
       </div>
@@ -167,7 +167,7 @@ export default function ProjectPage() {
           <p className="text-red-400 font-semibold mb-4 text-lg">Project not found or deleted</p>
           <button
             onClick={() => navigate('/dashboard')}
-            className="bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-2.5 rounded-xl font-medium transition"
+            className="bg-gradient-to-r from-cyan-600 to-teal-605 hover:from-cyan-500 hover:to-teal-555 text-white px-6 py-2.5 rounded-xl font-medium transition"
           >
             Back to Dashboard
           </button>
@@ -213,20 +213,20 @@ export default function ProjectPage() {
                     type="text"
                     value={editData.title}
                     onChange={(e) => setEditData({ ...editData, title: e.target.value })}
-                    className="w-full text-2xl font-bold bg-slate-900 border border-slate-800 text-white rounded-xl px-4 py-2 focus:outline-none focus:border-indigo-500"
+                    className="w-full text-2xl font-bold bg-slate-900 border border-slate-800 text-white rounded-xl px-4 py-2 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/35"
                     placeholder="Project Title"
                   />
                   <textarea
                     value={editData.description}
                     onChange={(e) => setEditData({ ...editData, description: e.target.value })}
-                    className="w-full bg-slate-900 border border-slate-800 text-white rounded-xl px-4 py-2 focus:outline-none focus:border-indigo-500 resize-none"
+                    className="w-full bg-slate-900 border border-slate-800 text-white rounded-xl px-4 py-2 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/35 resize-none"
                     rows={3}
                     placeholder="Project Description"
                   />
                 </div>
               ) : (
                 <div>
-                  <h1 className="text-3xl font-extrabold text-white tracking-tight bg-gradient-to-r from-indigo-200 via-slate-100 to-indigo-100 bg-clip-text text-transparent">
+                  <h1 className="text-3xl font-extrabold text-white tracking-tight bg-gradient-to-r from-cyan-200 via-slate-100 to-teal-100 bg-clip-text text-transparent">
                     {project.title}
                   </h1>
                   {project.description && (
@@ -259,7 +259,7 @@ export default function ProjectPage() {
                   <>
                     <button
                       onClick={() => setIsEditing(true)}
-                      className="bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-2 rounded-xl font-semibold transition shadow-lg shadow-indigo-950/20"
+                      className="bg-gradient-to-r from-cyan-600 to-teal-650 hover:from-cyan-500 hover:to-teal-555 text-white px-5 py-2 rounded-xl font-semibold transition shadow-lg shadow-cyan-950/20"
                     >
                       Edit Project
                     </button>
@@ -300,7 +300,7 @@ export default function ProjectPage() {
                 {canManageMembers && (
                   <button
                     onClick={() => setShowMembersModal(true)}
-                    className="bg-indigo-600/20 text-indigo-400 hover:bg-indigo-600/30 border border-indigo-500/20 px-2.5 py-1 rounded-xl text-xs font-semibold transition"
+                    className="bg-cyan-600/20 text-cyan-400 hover:bg-cyan-600/30 border border-cyan-500/20 px-2.5 py-1 rounded-xl text-xs font-semibold transition"
                   >
                     + Invite
                   </button>
@@ -370,9 +370,9 @@ export default function ProjectPage() {
                       placeholder="Type query & press enter..."
                       value={filters.search}
                       onChange={(e) => handleFilterChange('search', e.target.value)}
-                      className="w-full bg-slate-950 border border-slate-800 text-white rounded-xl pl-4 pr-10 py-2 text-sm focus:outline-none focus:border-indigo-500 transition"
+                      className="w-full bg-slate-950 border border-slate-800 text-white rounded-xl pl-4 pr-10 py-2 text-sm focus:outline-none focus:border-cyan-500 transition"
                     />
-                    <button type="submit" className="absolute right-3 top-2.5 text-slate-500 hover:text-indigo-400">
+                    <button type="submit" className="absolute right-3 top-2.5 text-slate-500 hover:text-cyan-400">
                       🔍
                     </button>
                   </div>
@@ -385,7 +385,7 @@ export default function ProjectPage() {
                       id="filter-status"
                       value={filters.status}
                       onChange={(e) => handleFilterChange('status', e.target.value)}
-                      className="w-full md:w-32 bg-slate-950 border border-slate-800 text-slate-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-indigo-500"
+                      className="w-full md:w-32 bg-slate-950 border border-slate-800 text-slate-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-cyan-500"
                     >
                       <option value="">All Statuses</option>
                       <option value="todo">To Do</option>
@@ -400,7 +400,7 @@ export default function ProjectPage() {
                       id="filter-priority"
                       value={filters.priority}
                       onChange={(e) => handleFilterChange('priority', e.target.value)}
-                      className="w-full md:w-32 bg-slate-950 border border-slate-800 text-slate-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-indigo-500"
+                      className="w-full md:w-32 bg-slate-950 border border-slate-800 text-slate-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-cyan-500"
                     >
                       <option value="">All Priorities</option>
                       <option value="low">Low</option>
@@ -423,7 +423,7 @@ export default function ProjectPage() {
                       onClick={() => setViewMode('list')}
                       className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition ${
                         viewMode === 'list'
-                          ? 'bg-indigo-600 text-white shadow-md shadow-indigo-950/20'
+                          ? 'bg-gradient-to-r from-cyan-600 to-teal-650 text-white shadow-md shadow-cyan-950/20'
                           : 'bg-slate-950 text-slate-400 hover:text-white border border-slate-800'
                       }`}
                     >
@@ -433,7 +433,7 @@ export default function ProjectPage() {
                       onClick={() => setViewMode('kanban')}
                       className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition ${
                         viewMode === 'kanban'
-                          ? 'bg-indigo-600 text-white shadow-md shadow-indigo-950/20'
+                          ? 'bg-gradient-to-r from-cyan-600 to-teal-650 text-white shadow-md shadow-cyan-950/20'
                           : 'bg-slate-950 text-slate-400 hover:text-white border border-slate-800'
                       }`}
                     >
@@ -445,7 +445,7 @@ export default function ProjectPage() {
                 {canCreateTickets && (
                   <button
                     onClick={() => setShowCreateTicketModal(true)}
-                    className="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2.5 rounded-xl font-bold text-sm transition shadow-lg shadow-indigo-950/20 w-full sm:w-auto"
+                    className="bg-gradient-to-r from-cyan-600 to-teal-650 hover:from-cyan-500 hover:to-teal-555 text-white px-4 py-2.5 rounded-xl font-bold text-sm transition shadow-lg shadow-cyan-950/20 w-full sm:w-auto"
                   >
                     + Create Ticket
                   </button>
@@ -454,7 +454,7 @@ export default function ProjectPage() {
 
               {ticketsLoading ? (
                 <div className="text-center py-16">
-                  <div className="w-8 h-8 border-4 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin mx-auto mb-3"></div>
+                  <div className="w-8 h-8 border-4 border-cyan-500/20 border-t-cyan-500 rounded-full animate-spin mx-auto mb-3"></div>
                   <p className="text-slate-400 text-sm">Querying active issues...</p>
                 </div>
               ) : tickets?.length ? (
@@ -488,7 +488,7 @@ export default function ProjectPage() {
                   {canCreateTickets && (
                     <button
                       onClick={() => setShowCreateTicketModal(true)}
-                      className="text-indigo-400 hover:text-indigo-300 font-semibold text-sm"
+                      className="text-cyan-400 hover:text-cyan-300 font-semibold text-sm"
                     >
                       Create the first ticket to get started!
                     </button>
