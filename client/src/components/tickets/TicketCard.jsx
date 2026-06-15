@@ -6,7 +6,9 @@
 
 // JSDoc: TicketCard displays bug type, priority levels, and assignment tags
 export default function TicketCard({ ticket, onClick, onDelete }) {
-  const getPriorityColor = (priority) => {
+  
+// Maps priority level string to colored badge border CSS tailwind classes
+const getPriorityColor = (priority) => {
     switch (priority) {
       case 'critical':
         return 'bg-red-950/40 text-red-400 border-red-900/30';
@@ -37,15 +39,15 @@ export default function TicketCard({ ticket, onClick, onDelete }) {
   const getTypeIcon = (type) => {
     switch (type) {
       case 'bug':
-        return 'ðŸ›';
+        return 'Ã°Å¸Ââ€º';
       case 'feature':
-        return 'âœ¨';
+        return 'Ã¢Å“Â¨';
       case 'task':
-        return 'âœ“';
+        return 'Ã¢Å“â€œ';
       case 'improvement':
-        return 'ðŸ“ˆ';
+        return 'Ã°Å¸â€œË†';
       default:
-        return 'ðŸ“';
+        return 'Ã°Å¸â€œÂ';
     }
   };
 
@@ -82,18 +84,18 @@ export default function TicketCard({ ticket, onClick, onDelete }) {
         <div className="space-y-2 text-xs text-slate-450 mb-4 pt-3 border-t border-slate-950/40">
           {ticket.assignee_name && (
             <div className="flex items-center gap-2">
-              <span>ðŸ‘¤</span>
+              <span>Ã°Å¸â€˜Â¤</span>
               <span>Assigned to: <span className="text-slate-300 font-medium">{ticket.assignee_name}</span></span>
             </div>
           )}
           {ticket.due_date && (
             <div className="flex items-center gap-2">
-              <span>ðŸ“…</span>
+              <span>Ã°Å¸â€œâ€¦</span>
               <span>Due: <span className="text-slate-300 font-medium">{new Date(ticket.due_date).toLocaleDateString()}</span></span>
             </div>
           )}
           <div className="flex items-center gap-2">
-            <span>ðŸ’¬</span>
+            <span>Ã°Å¸â€™Â¬</span>
             <span>{ticket.comment_count || 0} comments</span>
           </div>
         </div>
